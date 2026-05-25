@@ -105,7 +105,7 @@ const SLIDES_JOB_BUDGET_MS = 125_000;
 const AI_JSON_TIMEOUT_MS = 22_000;
 const AI_JSON_MAX_ATTEMPTS = 1;
 const NARRATIVE_TIMEOUT_MS = 5_000;
-const ENABLE_BLOCKING_SMART_IMAGES = false;
+const ENABLE_BLOCKING_SMART_IMAGES = true;
 
 console.log("[chat-slides-stream] image keys present:",
   { serper: !!SERPER_API_KEY, firecrawl: !!FIRECRAWL_API_KEY, pexels: !!PEXELS_API_KEY });
