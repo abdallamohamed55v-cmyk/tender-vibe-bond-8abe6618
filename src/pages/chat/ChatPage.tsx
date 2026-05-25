@@ -3798,18 +3798,16 @@ Ask me anything to get started!`;
                   )}
                    {/* Slides deck card under assistant message in slides mode */}
                     {msg.role === "assistant" && msg.slidesDeck && (
-                      <div className="px-3 md:px-12">
-                        <Suspense fallback={null}>
-                          {isStandardSlides(msg.slidesDeck.templateId) ? (
-                            <SlidesDeckCard deck={msg.slidesDeck} />
-                          ) : isPremiumHtml(msg.slidesDeck.templateId) && (msg.slidesDeck as SlideDeck & { htmlSlug?: string }).htmlSlug ? (
-                            <SlidesHtmlDeckCard deck={msg.slidesDeck as SlideDeck & { htmlSlug: string }} />
-                          ) : (
-                            <SlidesDeckCard deck={msg.slidesDeck} />
-                          )}
-                        </Suspense>
-                      </div>
-                    )}
+                       <div className="px-3 md:px-12">
+                         <Suspense fallback={null}>
+                           {isPremiumHtml(msg.slidesDeck.templateId) && (msg.slidesDeck as SlideDeck & { htmlSlug?: string }).htmlSlug ? (
+                             <SlidesHtmlDeckCard deck={msg.slidesDeck as SlideDeck & { htmlSlug: string }} />
+                           ) : (
+                             <SlidesDeckCard deck={msg.slidesDeck} />
+                           )}
+                         </Suspense>
+                       </div>
+                     )}
                     {msg.role === "assistant" && msg.standardSlides && (
                       <div className="px-3 md:px-12">
                         <Suspense fallback={null}>
