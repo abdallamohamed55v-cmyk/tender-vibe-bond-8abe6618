@@ -415,39 +415,12 @@ const SlidesDeckCard = ({ deck }: Props) => {
         >
           {cover?.image && <img src={cover.image} alt="" className="absolute inset-0 w-full h-full object-cover opacity-60 scale-110 group-hover:scale-100 transition-transform duration-1000" />}
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent pointer-events-none" />
-          <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white">
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: deck.palette.accent }} />
-            {total} slides
-          </span>
-          <div className="absolute bottom-4 left-5 right-5 text-left">
-            <h3 className="text-lg font-extrabold text-white line-clamp-2 tracking-tight">{deck.title}</h3>
-          </div>
           <div className="absolute top-4 right-4 inline-flex items-center gap-1 rounded-full bg-black/50 backdrop-blur px-2.5 py-1 text-[11px] font-medium text-white opacity-0 group-hover:opacity-100 transition">
             <Maximize2 className="w-3 h-3" /> Open
           </div>
         </button>
 
         <div className="px-6 pb-6 pt-4 flex flex-col gap-3">
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-[11px] font-medium text-zinc-500 truncate">{findSlidesTemplate(deck.templateId).name}</span>
-            <div className="flex items-center rounded-full bg-zinc-900 border border-white/5 p-0.5 shrink-0">
-              <button
-                onClick={() => setOrientation("horizontal")}
-                aria-label="Horizontal scroll"
-                className={`h-7 px-2 rounded-full text-[11px] font-medium flex items-center gap-1 transition ${orientation === "horizontal" ? "bg-white text-black" : "text-zinc-400 hover:text-white"}`}
-              >
-                <MoveHorizontal className="w-3 h-3" />
-              </button>
-              <button
-                onClick={() => setOrientation("vertical")}
-                aria-label="Vertical scroll"
-                className={`h-7 px-2 rounded-full text-[11px] font-medium flex items-center gap-1 transition ${orientation === "vertical" ? "bg-white text-black" : "text-zinc-400 hover:text-white"}`}
-              >
-                <MoveVertical className="w-3 h-3" />
-              </button>
-            </div>
-          </div>
-
           <button
             onClick={() => { setIdx(0); setOpen(true); }}
             className="w-full flex items-center justify-center gap-2 py-3.5 bg-white text-black font-semibold rounded-2xl transition-all active:scale-[0.97] hover:bg-zinc-100 shadow-lg text-[14px] tracking-tight"
