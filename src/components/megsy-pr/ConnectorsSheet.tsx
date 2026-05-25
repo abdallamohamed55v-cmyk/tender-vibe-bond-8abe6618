@@ -3,14 +3,25 @@ import { ChevronLeft, Power } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
-const STORAGE_KEY = "connectors:enabled";
-
-function readEnabled(): Record<string, boolean> {
-  if (typeof window === "undefined") return {};
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch { return {}; }
+// Connector state lives in user_connector_state (DB). No localStorage.
+async function readEnabledFromDB(): Promise<Record<string, boolean>> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return {};
+  const { data } = await supabase
+    .from("user_connector_state")
+    .select("connector_id, enabled")
+    .eq("user_id", user.id);
+  const out: Record<string, boolean> = {};
+  for (const r of (data as any[]) ?? []) out[r.connector_id] = !!r.enabled;
+  return out;
 }
-function writeEnabled(state: Record<string, boolean>) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch { /* noop */ }
+async function writeEnabledToDB(connectorId: string, enabled: boolean) {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+  await supabase.from("user_connector_state").upsert(
+    { user_id: user.id, connector_id: connectorId, enabled, updated_at: new Date().toISOString() } as any,
+    { onConflict: "user_id,connector_id" }
+  );
   try { window.dispatchEvent(new CustomEvent("connectors:changed")); } catch { /* noop */ }
 }
 
@@ -80,11 +91,25 @@ export default function ConnectorsSheet({ onClose }: { onClose: () => void }) {
   const active = CONNECTORS.find((c) => c.id === activeId) || null;
   const [mounted, setMounted] = useState(false);
   const [enabledMap, setEnabledMap] = useState<Record<string, boolean>>(() => {
-    const stored = readEnabled();
+    // Defaults until DB hydrates.
     const out: Record<string, boolean> = {};
-    for (const c of CONNECTORS) out[c.id] = stored[c.id] ?? c.enabled;
+    for (const c of CONNECTORS) out[c.id] = c.enabled;
     return out;
   });
+
+  // Hydrate from DB on mount.
+  useEffect(() => {
+    let cancelled = false;
+    readEnabledFromDB().then((stored) => {
+      if (cancelled) return;
+      setEnabledMap((prev) => {
+        const out = { ...prev };
+        for (const c of CONNECTORS) if (c.id in stored) out[c.id] = stored[c.id];
+        return out;
+      });
+    });
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setMounted(true));
@@ -93,18 +118,17 @@ export default function ConnectorsSheet({ onClose }: { onClose: () => void }) {
 
   useEffect(() => {
     const onChange = () => {
-      const stored = readEnabled();
-      setEnabledMap((prev) => {
-        const out: Record<string, boolean> = { ...prev };
-        for (const c of CONNECTORS) if (c.id in stored) out[c.id] = stored[c.id];
-        return out;
+      readEnabledFromDB().then((stored) => {
+        setEnabledMap((prev) => {
+          const out: Record<string, boolean> = { ...prev };
+          for (const c of CONNECTORS) if (c.id in stored) out[c.id] = stored[c.id];
+          return out;
+        });
       });
     };
     window.addEventListener("connectors:changed", onChange);
-    window.addEventListener("storage", onChange);
     return () => {
       window.removeEventListener("connectors:changed", onChange);
-      window.removeEventListener("storage", onChange);
     };
   }, []);
 
@@ -113,7 +137,7 @@ export default function ConnectorsSheet({ onClose }: { onClose: () => void }) {
     if (enabledMap[id]) {
       const next = { ...enabledMap, [id]: false };
       setEnabledMap(next);
-      writeEnabled({ ...readEnabled(), [id]: false });
+      await writeEnabledToDB(id, false);
       toast.success(`${c?.name ?? "Integration"} disabled for workspace`);
       return;
     }
@@ -125,9 +149,9 @@ export default function ConnectorsSheet({ onClose }: { onClose: () => void }) {
     }
     const next = { ...enabledMap, [id]: true };
     setEnabledMap(next);
-    writeEnabled({ ...readEnabled(), [id]: true });
+    await writeEnabledToDB(id, true);
     toast.success(`${c?.name ?? "Integration"} backend integration is active`);
-  }, []);
+  }, [enabledMap]);
 
   function handleClose() {
     setMounted(false);

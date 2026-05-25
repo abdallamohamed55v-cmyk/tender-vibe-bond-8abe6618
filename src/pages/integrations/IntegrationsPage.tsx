@@ -32,8 +32,6 @@ function getIcon(app: string): string | null {
   return ICON_MAP[app] ? `${ICON_BASE}/${ICON_MAP[app]}.svg` : null;
 }
 
-const LOCAL_KEY = "lovable.integrations.connected";
-
 const IntegrationsPage = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
@@ -46,8 +44,8 @@ const IntegrationsPage = () => {
 
   const loadConnections = async () => {
     try {
-      const raw = localStorage.getItem(LOCAL_KEY);
-      const next: Record<string, string> = raw ? JSON.parse(raw) : {};
+      // Backend is the source of truth — no localStorage.
+      const next: Record<string, string> = {};
       const [githubStatus, supabaseStatus] = await Promise.all([
         supabase.functions.invoke("github-push", { body: { action: "status" } }),
         supabase.functions.invoke("supabase-link-manager", { body: { action: "status" } }),
@@ -57,7 +55,6 @@ const IntegrationsPage = () => {
       if (!supabaseStatus.error && supabaseStatus.data?.connected) next.supabase = "linked";
       else delete next.supabase;
       setConnectedApps(next);
-      try { localStorage.setItem(LOCAL_KEY, JSON.stringify(next)); } catch {}
     } catch {
       // ignore
     } finally {
@@ -67,7 +64,6 @@ const IntegrationsPage = () => {
 
   const persist = (next: Record<string, string>) => {
     setConnectedApps(next);
-    try { localStorage.setItem(LOCAL_KEY, JSON.stringify(next)); } catch {}
   };
 
   const handleConnect = async (integration: Integration) => {

@@ -54,17 +54,51 @@ export default function MobileChatView({
   });
   const [credits, setCredits] = useState<{ used: number; total: number } | null>(null);
   const [moreMsgId, setMoreMsgId] = useState<string | null>(null);
-  const [feedback, setFeedback] = useState<Record<string, "up" | "down">>(() => {
-    if (typeof window === "undefined") return {};
-    try { return JSON.parse(localStorage.getItem(`chat-feedback:${projectId}`) || "{}"); } catch { return {}; }
-  });
+  const [feedback, setFeedback] = useState<Record<string, "up" | "down">>({});
+
+  // Hydrate feedback from DB (message_feedback table) on mount / project change.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+        const { data } = await supabase
+          .from("message_feedback")
+          .select("message_id, value")
+          .eq("user_id", user.id)
+          .eq("project_id", projectId);
+        if (cancelled) return;
+        const map: Record<string, "up" | "down"> = {};
+        for (const r of (data as any[]) ?? []) map[r.message_id] = r.value;
+        setFeedback(map);
+      } catch { /* ignore */ }
+    })();
+    return () => { cancelled = true; };
+  }, [projectId]);
 
   const setMsgFeedback = (msgId: string, value: "up" | "down") => {
     setFeedback((prev) => {
       const next = { ...prev };
-      if (next[msgId] === value) delete next[msgId];
+      const removing = next[msgId] === value;
+      if (removing) delete next[msgId];
       else next[msgId] = value;
-      try { localStorage.setItem(`chat-feedback:${projectId}`, JSON.stringify(next)); } catch { /* noop */ }
+      // Persist to DB (fire-and-forget).
+      (async () => {
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (!user) return;
+          if (removing) {
+            await supabase.from("message_feedback")
+              .delete().eq("user_id", user.id).eq("project_id", projectId).eq("message_id", msgId);
+          } else {
+            await supabase.from("message_feedback").upsert(
+              { user_id: user.id, project_id: projectId, message_id: msgId, value } as any,
+              { onConflict: "user_id,project_id,message_id" }
+            );
+          }
+        } catch { /* ignore */ }
+      })();
       toast.success(next[msgId] === "up" ? "Thanks for your feedback" : next[msgId] === "down" ? "We'll do better" : "Feedback removed");
       return next;
     });
