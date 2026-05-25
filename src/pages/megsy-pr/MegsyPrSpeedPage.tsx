@@ -73,11 +73,12 @@ export default function MegsyPrSpeedPage() {
     }
   };
 
-  const fixWithAI = () => {
+  const fixWithAI = async () => {
     if (!result || !projectId) return;
     const prompt = result.fix_prompt;
     try {
-      localStorage.setItem(`draft:${projectId}`, prompt);
+      const { saveProjectDraft } = await import("@/lib/projectDrafts");
+      await saveProjectDraft(projectId, prompt);
       sessionStorage.setItem(`autosend:${projectId}`, "1");
     } catch { /* noop */ }
     navigate(`/build/${projectId}/chat?prompt=${encodeURIComponent(prompt)}&autosend=1`);

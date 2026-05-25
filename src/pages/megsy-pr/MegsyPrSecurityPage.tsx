@@ -168,10 +168,11 @@ export default function MegsyPrSecurityPage() {
     setIgnoreFor(null); setIgnoreReason("");
   }
 
-  function sendToChat(prompt: string) {
+  async function sendToChat(prompt: string) {
     if (!projectId) return;
     try {
-      localStorage.setItem(`draft:${projectId}`, prompt);
+      const { saveProjectDraft } = await import("@/lib/projectDrafts");
+      await saveProjectDraft(projectId, prompt);
       sessionStorage.setItem(`autosend:${projectId}`, "1");
     } catch { /* noop */ }
     navigate(`/build/${projectId}/chat?prompt=${encodeURIComponent(prompt)}&autosend=1`);
