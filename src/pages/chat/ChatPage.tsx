@@ -32,7 +32,7 @@ import { friendlyUserMessage, reportError } from "@/lib/errors";
 
 import DeepResearchToggle from "@/components/research/DeepResearchToggle";
 import SlidesToggle from "@/components/chat/SlidesToggle";
-import { SLIDES_TEMPLATES, isPremiumHtml, isStandardSlides } from "@/lib/slidesTemplates";
+import { SLIDES_TEMPLATES, isPremiumHtml } from "@/lib/slidesTemplates";
 import type { SlideDeck } from "@/components/chat/SlidesDeckCard";
 import { DEFAULT_SLIDES_TEMPLATE, findSlidesTemplate } from "@/lib/slidesTemplates";
 import { authorizePremiumSlide, FREE_PREMIUM_SLIDES_PER_DAY } from "@/lib/slidesQuota";
