@@ -2407,16 +2407,13 @@ const ChatPage = () => {
       return;
     }
 
-    // Demo conversation on first visit
-    const demoKey = "megsy_demo_shown";
-    if (localStorage.getItem(demoKey)) return;
+    // Demo conversation on first visit — DB is source of truth (no localStorage)
     (async () => {
       const user = await getCachedUser();
       if (!user) return;
-      // Check if user has any conversations already
+      // If user already has any conversation, skip demo.
       const { count } = await supabase.from("conversations").select("id", { count: "exact", head: true }).eq("user_id", user.id);
-      if (count && count > 0) { localStorage.setItem(demoKey, "1"); return; }
-      localStorage.setItem(demoKey, "1");
+      if (count && count > 0) return;
 
       const demoUserMsg = "What is Megsy AI? Tell me everything about what you can do.";
       const demoAssistantMsg = `# Welcome to Megsy AI
