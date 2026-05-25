@@ -7648,30 +7648,63 @@ const SlidesHtmlDeckCard = ({ deck }: Props) => {
   const [downloadMenu, setDownloadMenu] = useState(false);
   const previewIframeRef = useRef<HTMLIFrameElement>(null);
 
-  // Scroll the embedded deck one viewport in the requested direction. Works in
-  // horizontal mode where the deck container is `overflow-x: auto` with snap.
-  const scrollDeck = (dir: "prev" | "next") => {
+  // Scroll the embedded deck to a specific slide. In horizontal mode we track
+  // an explicit index so smooth + scroll-snap-stop:always doesn't get stuck
+  // between snap points (which was causing the Next button to do nothing).
+  const slideIndexRef = useRef(0);
+  const getDeckEl = (): HTMLElement | null => {
     const win = previewIframeRef.current?.contentWindow;
-    if (!win) return;
+    if (!win) return null;
     try {
       const doc = win.document;
-      const deckEl =
+      return (
         (doc.querySelector(".lov-deck") as HTMLElement | null) ||
         (doc.scrollingElement as HTMLElement | null) ||
-        doc.documentElement;
-      if (!deckEl) return;
-      const isHorizontal = orientation === "horizontal";
-      const step = isHorizontal ? deckEl.clientWidth || win.innerWidth : deckEl.clientHeight || win.innerHeight;
-      const delta = dir === "next" ? step : -step;
-      if (isHorizontal) {
-        deckEl.scrollBy({ left: delta, behavior: "smooth" });
-      } else {
-        deckEl.scrollBy({ top: delta, behavior: "smooth" });
-      }
+        doc.documentElement
+      );
     } catch {
-      /* cross-origin or detached doc — ignore */
+      return null;
     }
   };
+  const scrollDeck = (dir: "prev" | "next") => {
+    const deckEl = getDeckEl();
+    if (!deckEl) return;
+    const isHorizontal = orientation === "horizontal";
+    const sections = deckEl.querySelectorAll<HTMLElement>(".lov-section");
+    const total = sections.length || deck.slides.length || 1;
+    const next = Math.max(0, Math.min(total - 1, slideIndexRef.current + (dir === "next" ? 1 : -1)));
+    slideIndexRef.current = next;
+    if (isHorizontal) {
+      const target = sections[next];
+      if (target && typeof target.scrollIntoView === "function") {
+        target.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+      } else {
+        const step = deckEl.clientWidth || 1;
+        deckEl.scrollTo({ left: next * step, behavior: "smooth" });
+      }
+    } else {
+      const step = deckEl.clientHeight || 1;
+      deckEl.scrollTo({ top: next * step, behavior: "smooth" });
+    }
+  };
+
+  // Listen for arrow-key / wheel events bubbled from the iframe so keyboard
+  // navigation works after the user clicks inside the preview.
+  useEffect(() => {
+    if (!open || orientation !== "horizontal") return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") {
+        e.preventDefault();
+        scrollDeck("next");
+      } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+        e.preventDefault();
+        scrollDeck("prev");
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, orientation]);
 
 
   useEffect(() => {
