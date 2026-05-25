@@ -84,13 +84,15 @@ const BillingSuccessPage = () => {
       } as never);
 
       if (!error && data) {
+        const wsId = (data as any).id;
         try {
-          localStorage.setItem("megsy_active_workspace_id", (data as any).id);
-          sessionStorage.removeItem("megsy_pending_workspace_name");
-          sessionStorage.removeItem("megsy_pending_workspace_plan");
-        } catch {
-          // ignore
-        }
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            await supabase.from("profiles").update({ active_workspace_id: wsId } as any).eq("id", user.id);
+          }
+        } catch { /* ignore */ }
+        try { sessionStorage.removeItem("megsy_pending_workspace_name"); } catch {}
+        try { sessionStorage.removeItem("megsy_pending_workspace_plan"); } catch {}
         navigate(`/settings/workspaces/${(data as any).id}`);
         return;
       }

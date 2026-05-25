@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { LogOut, Trash2, AlertTriangle, Copy } from "lucide-react";
 import { toast } from "sonner";
 import type { WorkspaceCtx } from "@/hooks/useWorkspaceContext";
+import { setActiveWorkspaceId, getActiveWorkspaceId } from "@/lib/activeWorkspace";
 
 export default function DangerTab() {
   const { ws, isOwner, me } = useOutletContext<{ ws: WorkspaceCtx; isOwner: boolean; me: string | null }>();
@@ -13,7 +14,10 @@ export default function DangerTab() {
     if (isOwner) { toast.error("Owner can't leave. Transfer ownership first."); return; }
     if (!confirm("Leave this workspace?")) return;
     await supabase.from("workspace_members").delete().eq("workspace_id", ws.id).eq("user_id", me!);
-    try { if (localStorage.getItem("megsy_active_workspace_id") === ws.id) localStorage.removeItem("megsy_active_workspace_id"); } catch {}
+    if (getActiveWorkspaceId() === ws.id) {
+      setActiveWorkspaceId(null);
+      if (me) await supabase.from("profiles").update({ active_workspace_id: null } as any).eq("id", me);
+    }
     toast.success("Left");
     navigate("/settings/workspaces");
   };
@@ -22,7 +26,10 @@ export default function DangerTab() {
     if (!confirm(`Permanently delete "${ws.name}" and all data? This cannot be undone.`)) return;
     const { error } = await supabase.from("workspaces").delete().eq("id", ws.id);
     if (error) { toast.error(error.message); return; }
-    try { if (localStorage.getItem("megsy_active_workspace_id") === ws.id) localStorage.removeItem("megsy_active_workspace_id"); } catch {}
+    if (getActiveWorkspaceId() === ws.id) {
+      setActiveWorkspaceId(null);
+      if (me) await supabase.from("profiles").update({ active_workspace_id: null } as any).eq("id", me);
+    }
     toast.success("Deleted");
     navigate("/settings/workspaces");
   };
