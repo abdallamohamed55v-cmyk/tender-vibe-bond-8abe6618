@@ -13,6 +13,9 @@ import MobilePreviewView from "@/components/megsy-pr/MobilePreviewView";
 import AppSidebar from "@/components/layout/AppSidebar";
 import { getProjectDraft, saveProjectDraftDebounced } from "@/lib/projectDrafts";
 
+// In-memory active job tracker (DB `background_jobs` is source of truth; this is just a fast lookup).
+const buildAgentActiveJobs = new Map<string, string>();
+
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 
 interface Msg { id?: string; role: "user" | "assistant"; content: string; raw?: string; pending?: boolean }
@@ -176,7 +179,7 @@ export default function MegsyPrWorkspacePage() {
     let unsub: (() => void) | null = null;
     (async () => {
       let jobId: string | null = null;
-      try { jobId = localStorage.getItem(`buildAgent:activeJob:${projectId}`); } catch { /* ignore */ }
+      jobId = buildAgentActiveJobs.get(projectId) ?? null;
       // Cross-device fallback: look up an active code_build job for this project in the DB.
       if (!jobId) {
         try {
@@ -187,14 +190,14 @@ export default function MegsyPrWorkspacePage() {
           });
           if (match) {
             jobId = match.id;
-            try { localStorage.setItem(`buildAgent:activeJob:${projectId}`, jobId); } catch { /* ignore */ }
+            buildAgentActiveJobs.set(projectId, jobId);
           }
         } catch { /* ignore */ }
       }
       if (!jobId) return;
       const row = await getJob(jobId).catch(() => null);
       if (!row || row.status === "done" || row.status === "error" || row.status === "canceled") {
-        try { localStorage.removeItem(`buildAgent:activeJob:${projectId}`); } catch { /* ignore */ }
+        buildAgentActiveJobs.delete(projectId);
         await reloadFiles();
         return;
       }
@@ -233,7 +236,7 @@ export default function MegsyPrWorkspacePage() {
           }
         },
         onDone: () => {
-          try { localStorage.removeItem(`buildAgent:activeJob:${projectId}`); } catch { /* ignore */ }
+          buildAgentActiveJobs.delete(projectId);
           setStreaming(false);
           setStep("");
           setMessages((m) => {
@@ -245,14 +248,14 @@ export default function MegsyPrWorkspacePage() {
           void reloadFiles();
         },
         onError: (msg) => {
-          try { localStorage.removeItem(`buildAgent:activeJob:${projectId}`); } catch { /* ignore */ }
+          buildAgentActiveJobs.delete(projectId);
           setStreaming(false);
           setStep("");
           toast.error(msg);
         },
         onStale: async (row) => {
           const msg = "The coding agent stopped before finishing. Conversation and files were saved — press Send to resume the same project.";
-          try { localStorage.removeItem(`buildAgent:activeJob:${projectId}`); } catch { /* ignore */ }
+          buildAgentActiveJobs.delete(projectId);
           await failStaleJob(row.id, msg);
           setStreaming(false);
           setStep("");
@@ -335,7 +338,7 @@ export default function MegsyPrWorkspacePage() {
         auto_fix_error: autoFixError,
         background: true,
       });
-      try { localStorage.setItem(`buildAgent:activeJob:${projectId}`, jobId); } catch { /* ignore */ }
+      buildAgentActiveJobs.set(projectId, jobId);
 
       let consumedEvents = 0;
       await new Promise<void>((resolve) => {
@@ -350,7 +353,7 @@ export default function MegsyPrWorkspacePage() {
             }
           },
           onDone: () => {
-            try { localStorage.removeItem(`buildAgent:activeJob:${projectId}`); } catch { /* ignore */ }
+            buildAgentActiveJobs.delete(projectId);
             setMessages((m) => {
               const copy = [...m];
               const last = copy[copy.length - 1];
@@ -378,7 +381,7 @@ export default function MegsyPrWorkspacePage() {
             resolve();
           },
           onError: (msg) => {
-            try { localStorage.removeItem(`buildAgent:activeJob:${projectId}`); } catch { /* ignore */ }
+            buildAgentActiveJobs.delete(projectId);
             toast.error(msg);
             setMessages((m) => m.filter((x) => !x.pending));
             unsub();
@@ -386,7 +389,7 @@ export default function MegsyPrWorkspacePage() {
           },
           onStale: async (row) => {
             const msg = "The coding agent stopped before finishing. Conversation and files were saved — you can resume from the same project.";
-            try { localStorage.removeItem(`buildAgent:activeJob:${projectId}`); } catch { /* ignore */ }
+            buildAgentActiveJobs.delete(projectId);
             await failStaleJob(row.id, msg);
             toast.error(msg);
             setMessages((m) => m.filter((x) => !x.pending));
