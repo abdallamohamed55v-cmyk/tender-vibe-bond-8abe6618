@@ -193,6 +193,7 @@ Deno.serve(async (req) => {
     let thumbnail_url = thumb_id ? await getFileUrl(thumb_id) : null;
 
     // For images: download, convert to WebP, upload to Supabase Storage
+    // For videos: download as-is and upload to Storage (Telegram URLs are not permanent)
     let final_media_url = media_url;
     if (media_type === "image") {
       try {
@@ -209,6 +210,44 @@ Deno.serve(async (req) => {
         final_media_url = pub.publicUrl;
       } catch (e) {
         console.error("webp conversion failed, falling back to telegram url", e);
+      }
+    } else if (media_type === "video") {
+      try {
+        const dl = await fetch(media_url);
+        if (!dl.ok) throw new Error(`download failed ${dl.status}`);
+        const inputBytes = new Uint8Array(await dl.arrayBuffer());
+        const ext = media_url.split(".").pop()?.toLowerCase() || "mp4";
+        const safeExt = ["mp4", "webm", "mov", "m4v"].includes(ext) ? ext : "mp4";
+        const contentType = safeExt === "webm" ? "video/webm" : "video/mp4";
+        const path = `telegram/${chat_id}/${message.message_id}-${Date.now()}.${safeExt}`;
+        const { error: upErr } = await db.storage
+          .from("showcase-media")
+          .upload(path, inputBytes, { contentType, upsert: true });
+        if (upErr) throw upErr;
+        const { data: pub } = db.storage.from("showcase-media").getPublicUrl(path);
+        final_media_url = pub.publicUrl;
+      } catch (e) {
+        console.error("video upload failed, falling back to telegram url", e);
+      }
+
+      // Upload thumbnail too (as webp) so we have permanent thumb
+      if (thumbnail_url) {
+        try {
+          const dl = await fetch(thumbnail_url);
+          if (dl.ok) {
+            const tbytes = new Uint8Array(await dl.arrayBuffer());
+            const webpThumb = await convertToWebp(tbytes);
+            const tpath = `telegram/${chat_id}/${message.message_id}-${Date.now()}-thumb.webp`;
+            const { error: tErr } = await db.storage
+              .from("showcase-media")
+              .upload(tpath, webpThumb, { contentType: "image/webp", upsert: true });
+            if (!tErr) {
+              thumbnail_url = db.storage.from("showcase-media").getPublicUrl(tpath).data.publicUrl;
+            }
+          }
+        } catch (e) {
+          console.error("thumb upload failed", e);
+        }
       }
     }
 
