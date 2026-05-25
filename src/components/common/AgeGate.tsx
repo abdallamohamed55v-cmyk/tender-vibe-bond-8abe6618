@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
-const STORAGE_KEY = "megsy_age_confirmed_v1";
+import { supabase } from "@/integrations/supabase/client";
 
 /**
  * Global 18+ age gate.
@@ -10,22 +9,38 @@ const STORAGE_KEY = "megsy_age_confirmed_v1";
  */
 const AgeGate = () => {
   const [open, setOpen] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      if (!localStorage.getItem(STORAGE_KEY)) setOpen(true);
-    } catch {
-      setOpen(true);
-    }
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      const uid = data?.user?.id ?? null;
+      if (cancelled) return;
+      setUserId(uid);
+      if (!uid) {
+        // Not signed in: show the gate; confirmation will be saved once they sign in.
+        setOpen(true);
+        return;
+      }
+      const { data: prof } = await supabase
+        .from("profiles")
+        .select("age_gate_acked_at")
+        .eq("id", uid)
+        .maybeSingle();
+      if (!cancelled && !(prof as any)?.age_gate_acked_at) setOpen(true);
+    })();
+    return () => { cancelled = true; };
   }, []);
 
-  const confirm = () => {
-    try {
-      localStorage.setItem(STORAGE_KEY, String(Date.now()));
-    } catch {
-      /* ignore */
-    }
+  const confirm = async () => {
     setOpen(false);
+    if (userId) {
+      await supabase
+        .from("profiles")
+        .update({ age_gate_acked_at: new Date().toISOString() } as any)
+        .eq("id", userId);
+    }
   };
 
   const decline = () => {

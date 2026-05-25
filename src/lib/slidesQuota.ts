@@ -2,29 +2,35 @@
 // then it costs 1 credit per generation.
 import { supabase } from "@/integrations/supabase/client";
 
-const KEY_PREFIX = "megsy_premium_slides_used_";
 export const FREE_PREMIUM_SLIDES_PER_DAY = 3;
 export const PREMIUM_SLIDES_CREDIT_COST = 1;
+const FEATURE = "premium_slides";
 
-function todayKey(userId: string) {
+function todayYMD(): string {
   const d = new Date();
-  const ymd = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-  return `${KEY_PREFIX}${userId}_${ymd}`;
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-export function getPremiumSlidesUsedToday(userId: string): number {
-  try {
-    const v = localStorage.getItem(todayKey(userId));
-    return v ? Math.max(0, parseInt(v, 10) || 0) : 0;
-  } catch { return 0; }
+export async function getPremiumSlidesUsedToday(userId: string): Promise<number> {
+  const { data } = await supabase
+    .from("daily_free_usage")
+    .select("usage_count")
+    .eq("user_id", userId)
+    .eq("usage_date", todayYMD())
+    .eq("feature", FEATURE)
+    .maybeSingle();
+  return Math.max(0, (data as any)?.usage_count ?? 0);
 }
 
-export function incrementPremiumSlidesUsedToday(userId: string) {
-  try {
-    const k = todayKey(userId);
-    const current = getPremiumSlidesUsedToday(userId);
-    localStorage.setItem(k, String(current + 1));
-  } catch { /* ignore */ }
+export async function incrementPremiumSlidesUsedToday(userId: string): Promise<void> {
+  const today = todayYMD();
+  const current = await getPremiumSlidesUsedToday(userId);
+  await supabase
+    .from("daily_free_usage")
+    .upsert(
+      { user_id: userId, usage_date: today, feature: FEATURE, usage_count: current + 1 } as any,
+      { onConflict: "user_id,usage_date,feature" },
+    );
 }
 
 /**
@@ -36,9 +42,9 @@ export function incrementPremiumSlidesUsedToday(userId: string) {
 export async function authorizePremiumSlide(
   userId: string,
 ): Promise<{ ok: true; charged: boolean; remainingFree: number } | { ok: false; reason: string }> {
-  const used = getPremiumSlidesUsedToday(userId);
+  const used = await getPremiumSlidesUsedToday(userId);
   if (used < FREE_PREMIUM_SLIDES_PER_DAY) {
-    incrementPremiumSlidesUsedToday(userId);
+    await incrementPremiumSlidesUsedToday(userId);
     return { ok: true, charged: false, remainingFree: FREE_PREMIUM_SLIDES_PER_DAY - used - 1 };
   }
   // Charge 1 credit

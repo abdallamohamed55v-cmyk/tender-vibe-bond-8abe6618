@@ -60,9 +60,7 @@ export default function MegsyPrPublishPage({ onClose, onPublished }: Props = {})
       if (data) {
         const p = data as any;
         setProject(p);
-        const local = (() => { try { return JSON.parse(localStorage.getItem(`publish:${projectId}`) || "{}"); } catch { return {}; } })();
-        const remote = (p.publish_settings as any) || {};
-        const merged = { ...local, ...remote };
+        const merged = ((p.publish_settings as any) || {}) as Record<string, any>;
         setSlug(merged.slug || `app-${String(p.id || "").slice(0, 8)}`);
         setSeo({
           title: merged.title || p.name || "",
@@ -116,9 +114,6 @@ export default function MegsyPrPublishPage({ onClose, onPublished }: Props = {})
         favicon: seo.favicon,
         visibility,
       };
-      try {
-        localStorage.setItem(`publish:${projectId}`, JSON.stringify(settings));
-      } catch { /* noop */ }
 
       // Persist publish settings + visibility to DB so they're authoritative.
       await supabase
@@ -162,7 +157,6 @@ export default function MegsyPrPublishPage({ onClose, onPublished }: Props = {})
         favicon: seo.favicon,
         visibility,
       };
-      try { localStorage.setItem(`publish:${projectId}`, JSON.stringify(settings)); } catch { /* noop */ }
 
       await supabase
         .from("projects")

@@ -1463,6 +1463,7 @@ export type Database = {
       daily_free_usage: {
         Row: {
           created_at: string
+          feature: string
           id: string
           usage_count: number
           usage_date: string
@@ -1470,6 +1471,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          feature?: string
           id?: string
           usage_count?: number
           usage_date?: string
@@ -1477,6 +1479,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          feature?: string
           id?: string
           usage_count?: number
           usage_date?: string
@@ -3444,6 +3447,7 @@ export type Database = {
       profiles: {
         Row: {
           active_workspace_id: string | null
+          age_gate_acked_at: string | null
           agents_onboarding_seen: boolean
           avatar_url: string | null
           chat_greeted: boolean
@@ -3457,6 +3461,7 @@ export type Database = {
         }
         Insert: {
           active_workspace_id?: string | null
+          age_gate_acked_at?: string | null
           agents_onboarding_seen?: boolean
           avatar_url?: string | null
           chat_greeted?: boolean
@@ -3470,6 +3475,7 @@ export type Database = {
         }
         Update: {
           active_workspace_id?: string | null
+          age_gate_acked_at?: string | null
           agents_onboarding_seen?: boolean
           avatar_url?: string | null
           chat_greeted?: boolean
@@ -3546,6 +3552,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      project_publish_settings: {
+        Row: {
+          created_at: string
+          id: string
+          project_id: string
+          settings: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          project_id: string
+          settings?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          project_id?: string
+          settings?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       project_sandboxes: {
         Row: {
