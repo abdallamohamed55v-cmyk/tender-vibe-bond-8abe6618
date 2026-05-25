@@ -1365,7 +1365,8 @@ TEACHING RULES:
     }
 
     // Trim messages: keep last 20 for context, 4 for casual chats
-    const HISTORY_LIMIT = isCasualMessage ? 4 : 20;
+    // Keep enough turns even for casual chats so the model remembers prior context.
+    const HISTORY_LIMIT = isCasualMessage ? 12 : 20;
     const trimmedMessages = Array.isArray(messages) && messages.length > HISTORY_LIMIT
       ? messages.slice(-HISTORY_LIMIT)
       : messages;
