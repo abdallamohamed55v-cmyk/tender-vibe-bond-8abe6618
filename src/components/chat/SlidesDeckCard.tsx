@@ -407,55 +407,71 @@ const SlidesDeckCard = ({ deck }: Props) => {
   const cover = deck.slides[0];
   return (
     <>
-      <div className="mt-3 rounded-2xl overflow-hidden border border-border/40 bg-card max-w-xl">
+      <div className="mt-3 group relative max-w-[420px] rounded-[2rem] overflow-hidden bg-zinc-950 border border-white/5 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] transition-all duration-700 hover:border-white/10">
         <button
           onClick={() => { setIdx(0); setOpen(true); }}
-          className="relative block w-full aspect-[16/9] overflow-hidden group"
+          className="relative block w-full aspect-[16/9] overflow-hidden bg-zinc-900"
           style={{ background: deck.palette.bg }}
         >
-          {cover?.image && <img src={cover.image} alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />}
-          <div className="absolute inset-0 flex flex-col justify-end p-5" style={{ background: `linear-gradient(180deg, transparent, ${deck.palette.bg}ee)` }}>
-            <div className="text-xs font-bold uppercase tracking-[0.3em] mb-1.5" style={{ color: deck.palette.accent }}>Presentation · {total} slides</div>
-            <h3 className="text-xl md:text-2xl font-extrabold line-clamp-2" style={{ color: deck.palette.fg }}>{deck.title}</h3>
-            {deck.subtitle && <p className="text-sm opacity-80 mt-1 line-clamp-1" style={{ color: deck.palette.fg }}>{deck.subtitle}</p>}
+          {cover?.image && <img src={cover.image} alt="" className="absolute inset-0 w-full h-full object-cover opacity-60 scale-110 group-hover:scale-100 transition-transform duration-1000" />}
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent pointer-events-none" />
+          <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white">
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: deck.palette.accent }} />
+            {total} slides
+          </span>
+          <div className="absolute bottom-4 left-5 right-5 text-left">
+            <h3 className="text-lg font-extrabold text-white line-clamp-2 tracking-tight">{deck.title}</h3>
           </div>
-          <div className="absolute top-3 right-3 inline-flex items-center gap-1 rounded-full bg-black/40 backdrop-blur px-2.5 py-1 text-[11px] font-medium text-white opacity-0 group-hover:opacity-100 transition">
+          <div className="absolute top-4 right-4 inline-flex items-center gap-1 rounded-full bg-black/50 backdrop-blur px-2.5 py-1 text-[11px] font-medium text-white opacity-0 group-hover:opacity-100 transition">
             <Maximize2 className="w-3 h-3" /> Open
           </div>
         </button>
-        <div className="flex items-center justify-between px-3 py-2 border-t border-border/40 bg-background/40 gap-2">
-          <div className="flex items-center rounded-full bg-muted/60 p-0.5 shrink-0">
-            <button
-              onClick={() => setOrientation("horizontal")}
-              aria-label="Horizontal scroll"
-              title="Horizontal"
-              className={`h-7 px-2 rounded-full text-[11px] font-medium flex items-center gap-1 transition ${orientation === "horizontal" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}
-            >
-              <MoveHorizontal className="w-3 h-3" />
-            </button>
-            <button
-              onClick={() => setOrientation("vertical")}
-              aria-label="Vertical scroll"
-              title="Vertical"
-              className={`h-7 px-2 rounded-full text-[11px] font-medium flex items-center gap-1 transition ${orientation === "vertical" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}
-            >
-              <MoveVertical className="w-3 h-3" />
-            </button>
+
+        <div className="px-6 pb-6 pt-4 flex flex-col gap-3">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-[11px] font-medium text-zinc-500 truncate">{findSlidesTemplate(deck.templateId).name}</span>
+            <div className="flex items-center rounded-full bg-zinc-900 border border-white/5 p-0.5 shrink-0">
+              <button
+                onClick={() => setOrientation("horizontal")}
+                aria-label="Horizontal scroll"
+                className={`h-7 px-2 rounded-full text-[11px] font-medium flex items-center gap-1 transition ${orientation === "horizontal" ? "bg-white text-black" : "text-zinc-400 hover:text-white"}`}
+              >
+                <MoveHorizontal className="w-3 h-3" />
+              </button>
+              <button
+                onClick={() => setOrientation("vertical")}
+                aria-label="Vertical scroll"
+                className={`h-7 px-2 rounded-full text-[11px] font-medium flex items-center gap-1 transition ${orientation === "vertical" ? "bg-white text-black" : "text-zinc-400 hover:text-white"}`}
+              >
+                <MoveVertical className="w-3 h-3" />
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="flex items-center justify-between px-3 py-2 border-t border-border/40 bg-background/40 gap-2">
-          <div className="text-xs text-muted-foreground truncate min-w-0">{findSlidesTemplate(deck.templateId).name}</div>
-          <div className="flex items-center gap-1.5 shrink-0">
-            <button onClick={() => { setIdx(0); setOpen(true); }} className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-foreground text-background hover:opacity-90 transition">
-              <Maximize2 className="w-3 h-3" />
-              Preview
+
+          <button
+            onClick={() => { setIdx(0); setOpen(true); }}
+            className="w-full flex items-center justify-center gap-2 py-3.5 bg-white text-black font-semibold rounded-2xl transition-all active:scale-[0.97] hover:bg-zinc-100 shadow-lg text-[14px] tracking-tight"
+          >
+            <Maximize2 className="w-4 h-4" />
+            Open in preview
+          </button>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handlePptx}
+              disabled={exportingPptx}
+              className="flex-1 flex items-center justify-center gap-2 py-3 bg-zinc-900 text-zinc-400 hover:text-white font-medium rounded-2xl border border-white/5 transition-all hover:bg-zinc-800 active:scale-[0.97] disabled:opacity-50 text-[13px]"
+            >
+              {exportingPptx ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+              PPTX
             </button>
-            <button onClick={handlePptx} disabled={exportingPptx} className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-accent/60 hover:bg-accent border border-border/40 transition disabled:opacity-50">
-              {exportingPptx ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />}
-              Download PPTX
-            </button>
-            <button onClick={handleHtml} disabled={exportingHtml} aria-label="HTML" title="Download HTML" className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-border/60 hover:bg-muted/40 transition disabled:opacity-50">
-              {exportingHtml ? <Loader2 className="w-3 h-3 animate-spin" /> : <FileCode2 className="w-3.5 h-3.5" />}
+            <button
+              onClick={handleHtml}
+              disabled={exportingHtml}
+              aria-label="HTML"
+              className="w-11 h-11 flex items-center justify-center bg-zinc-900 text-zinc-400 hover:text-white rounded-2xl border border-white/5 transition-all hover:bg-zinc-800 active:scale-[0.97] disabled:opacity-50"
+            >
+              {exportingHtml ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileCode2 className="w-4 h-4" />}
             </button>
           </div>
         </div>
