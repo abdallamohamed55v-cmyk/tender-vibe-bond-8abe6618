@@ -6,6 +6,7 @@ import {
 import { Copy, ThumbsUp, ThumbsDown, Check, Play, FileUp, Share2, Pencil, Type, Ellipsis, Link2, ChevronDown, Sparkles } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { motion, AnimatePresence } from "framer-motion";
+import MegsyStar from "@/components/files/MegsyStar";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
@@ -909,22 +910,13 @@ const ChatMessage = ({ role, content, messageIndex, isStreaming, isThinking, ima
               </div>
             );
             if (showSlidesInfoBox) {
-              const isAr = al === "ar";
-              const kicker = isAr ? "جارٍ تجهيز العرض" : "Preparing your deck";
               return (
                 <div className="space-y-2" dir={langDir(al)}>
-                  {isStreaming && (
-                    <div className="text-[11px] font-bold tracking-[0.05em] text-primary uppercase opacity-90">
-                      {kicker}
-                    </div>
-                  )}
                   <div className="relative">
                     {inner}
                     {isStreaming && (
-                      <span className="inline-flex gap-0.5 ms-1 align-baseline">
-                        <span className="w-1 h-1 bg-primary rounded-full animate-pulse" />
-                        <span className="w-1 h-1 bg-primary rounded-full animate-pulse [animation-delay:150ms]" />
-                        <span className="w-1 h-1 bg-primary rounded-full animate-pulse [animation-delay:300ms]" />
+                      <span className="inline-flex ms-1 align-baseline">
+                        <MegsyStar size={14} />
                       </span>
                     )}
                   </div>
