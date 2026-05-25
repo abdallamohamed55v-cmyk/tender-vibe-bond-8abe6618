@@ -459,14 +459,14 @@ Template contract:
 - You are free to vary slide structure, hierarchy, density, and composition using layout/variant/accent fields.
 - Treat the template as an art direction, not a rigid screenshot: preserve its background/fonts while making each slide design feel custom to the topic.
 
-Available layouts (40 — pick the BEST fit per slide, mix freely):
-TEXT+IMAGE: "split-right" "split-left" "image-full" "image-top" "image-bottom" "image-side-card" "focus-image" "magazine-cover" "diagonal-split" "polaroid"
-TEXT-ONLY: "centered" "centered-narrow" "left-aligned-hero" "right-aligned-hero" "definition" "manifesto" "poster-typo" "pull-quote" "callout"
-GRID/COLUMNS: "two-col" "three-col" "four-col" "bento" "masonry-cards" "pillars" "icon-grid" "ribbon-cards"
-COMPARE/CONTRAST: "comparison" "before-after" "vs-split" "table-compare"
-DATA/IMPACT: "big-number" "stat-cluster" "stat-circles" "kpi-strip"
-NARRATIVE: "process" "timeline" "timeline-horizontal" "numbered-list" "step-vertical" "story-rows"
-MEDIA: "gallery" "image-grid-2" "image-grid-4" "carousel-strip"
+Available layouts (100 — pick the BEST fit per slide, mix freely):
+TEXT+IMAGE: "split-right" "split-left" "image-full" "image-top" "image-bottom" "image-side-card" "focus-image" "magazine-cover" "diagonal-split" "polaroid" "hero-image-right" "hero-image-left" "image-card-overlay" "image-quote-overlay" "split-image-stack" "split-image-bleed" "image-with-stats" "image-with-caption" "image-strip-top" "image-strip-bottom"
+TEXT-ONLY: "centered" "centered-narrow" "left-aligned-hero" "right-aligned-hero" "definition" "manifesto" "poster-typo" "pull-quote" "callout" "oversized-title" "title-with-rule" "centered-eyebrow" "asymmetric-title" "split-title-body" "framed-title" "stacked-statement" "drop-cap-paragraph" "dialogue-block" "indented-statement"
+GRID/COLUMNS: "two-col" "three-col" "four-col" "bento" "masonry-cards" "pillars" "icon-grid" "ribbon-cards" "asymmetric-bento" "vertical-cards" "horizontal-strips" "two-col-divided" "three-col-numbered" "feature-grid-2x2" "feature-grid-3x2" "card-list" "kanban-cols" "tiled-grid"
+COMPARE/CONTRAST: "comparison" "before-after" "vs-split" "table-compare" "pros-cons" "side-by-side-cards" "old-vs-new" "matrix-2x2" "competitor-table"
+DATA/IMPACT: "big-number" "stat-cluster" "stat-circles" "kpi-strip" "stat-hero" "stat-row" "stat-pair" "stat-grid-4" "metric-card" "trend-callout" "percentage-bar" "ranking-list"
+NARRATIVE: "process" "timeline" "timeline-horizontal" "numbered-list" "step-vertical" "story-rows" "milestone-row" "roadmap" "phases" "swim-lanes" "decision-tree" "flow-arrows" "story-chapters"
+MEDIA: "gallery" "image-grid-2" "image-grid-4" "carousel-strip" "image-mosaic-3" "image-mosaic-5" "image-quote-pair" "image-stats-pair" "image-grid-6"
 
 Visual variants (apply via "variant" — changes card surface, borders, shadows):
 - "default": clean, no boxes
@@ -490,7 +490,11 @@ Rules:
 - ${lengthRule}
 - First slide MUST be "cover", last MUST be "closing".
 ${sectionRule}
- - VARY aggressively inside the selected template: NEVER use the same layout twice in a row, NEVER same variant twice in a row. Across the deck use AT LEAST 10 different layouts and AT LEAST 4 different variants.
+ - VARY aggressively (STRICT, AUTO-ENFORCED — violations are overwritten post-generation):
+   * NEVER reuse the same layout id within ANY rolling window of 4 consecutive content slides.
+   * NEVER use two layouts from the same composition family back-to-back. Families: split-image, image-hero, image-stack, image-card, editorial, centered-text, hero-text, definition, statement, quote, columns, bento, cards, compare, table, hero-stat, stat-grid, stat-strip, process, timeline, gallery.
+   * NEVER same variant twice in a row. NEVER same accent twice in a row.
+   * Across a 10-slide deck, USE AT LEAST 8 DISTINCT layout ids AND AT LEAST 6 DISTINCT families AND AT LEAST 5 DISTINCT variants.
  - SLIDE-TYPE MIX (CRITICAL — prevents the deck from feeling monotonous): For every 8 content slides you MUST include AT LEAST: 1 "quote", 1 "stats" (or content slide with layout="big-number"), 1 slide with layout="comparison" OR "before-after" OR "vs-split", 1 with layout="timeline" OR "process", 1 with layout="callout" OR "manifesto" OR "pull-quote" (text-only hero), 1 with layout="gallery" OR "image-grid-2" OR "image-grid-4", AND at most 3 bullets/grid-card slides total. Bullet-grid layouts (bento, two-col, three-col, four-col, icon-grid, ribbon-cards, pillars) must NEVER exceed 40% of the deck — they all look visually similar.
  - CONTENT DIVERSITY (CRITICAL): Each slide MUST tackle a DISTINCT angle of the topic. Plan the deck as a JOURNEY: hook → definition → history/context → key players → how it works → numbers/stats → real case study → comparison/alternatives → risks/myths → regional or cultural lens → future outlook → actionable takeaways → closing. No two slides may repeat the same idea or rephrase the same point. Titles must NOT share the same noun phrase.
 - For "comparison","before-after","vs-split","table-compare" include "left_title","right_title","left_bullets":[…],"right_bullets":[…].
