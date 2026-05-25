@@ -7853,11 +7853,6 @@ const SlidesHtmlDeckCard = ({ deck }: Props) => {
 
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent pointer-events-none" />
 
-          <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white">
-            <span className="w-1.5 h-1.5 rounded-full bg-white/70" />
-            {isStandardDeck ? "العادي" : "المميز"}
-          </span>
-
           <div className="absolute top-4 right-4 inline-flex items-center gap-1 rounded-full bg-black/50 backdrop-blur px-2.5 py-1 text-[11px] font-medium text-white opacity-0 group-hover:opacity-100 transition">
             <Maximize2 className="w-3 h-3" /> Open
           </div>
