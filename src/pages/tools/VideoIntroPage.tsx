@@ -6,8 +6,8 @@ import { ArrowLeft, Upload, Download, Share2, RefreshCw, Film } from "lucide-rea
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useCredits } from "@/hooks/useCredits";
-import heroImg from "@/assets/tool-landing/video-intro-v8.jpg";
-import samplePoster from "@/assets/video-intro-sample-boy-v2.jpg";
+import heroImg from "@/assets/tool-landing/video-intro-v8.webp";
+import samplePoster from "@/assets/video-intro-sample-boy-v2.webp";
 
 type Stage = "landing" | "compose" | "generating" | "result";
 

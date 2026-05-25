@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { removeBackground } from "@imgly/background-removal";
-import bgRemoverHero from "@/assets/bg-remover-hero.jpg";
+import bgRemoverHero from "@/assets/bg-remover-hero.webp";
 import MediaToolShell, { type ToolStage } from "@/components/media/MediaToolShell";
 
 const BgRemoverPage = () => {

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { DesktopSettingsLayout } from "@/components/settings/DesktopSettingsLayout";
-import visaBg from "@/assets/visa-bg.png";
+import visaBg from "@/assets/visa-bg.webp";
 import MegsyStar from "@/components/branding/MegsyStar";
 
 const planTone = (plan: string) => {

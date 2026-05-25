@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import referralBanner from "@/assets/referral-banner.jpg";
+import referralBanner from "@/assets/referral-banner.webp";
 
 const steps = [
   { num: "01", title: "Create Your Account", desc: "Sign up for free and get your unique partner dashboard." },

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useCredits } from "@/hooks/useCredits";
-import retouchingHero from "@/assets/retouching-hero.jpg";
+import retouchingHero from "@/assets/retouching-hero.webp";
 import MediaToolShell, { type ToolStage } from "@/components/media/MediaToolShell";
 
 const RetouchingPage = () => {

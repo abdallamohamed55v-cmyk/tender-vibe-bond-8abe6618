@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import bg from "@/assets/final-cta-bg.jpg";
+import bg from "@/assets/final-cta-bg.webp";
 
 const FinalHeroCTA = () => {
   const navigate = useNavigate();

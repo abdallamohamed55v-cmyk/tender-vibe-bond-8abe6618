@@ -6,7 +6,7 @@ import { ArrowLeft, Paintbrush, Eraser, Upload, Download, Undo2, Loader2, Wand2,
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
-import removerHero from "@/assets/remover-hero.jpg";
+import removerHero from "@/assets/remover-hero.webp";
 
 type Stage = "landing" | "edit" | "result";
 type Tool = "brush" | "eraser";

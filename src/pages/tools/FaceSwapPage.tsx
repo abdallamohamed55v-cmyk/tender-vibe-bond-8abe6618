@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, UserRound, Check, Upload, Download, Share2, RefreshCw, Loader2, Wand2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import faceMagicHero from "@/assets/face-magic-hero.jpg";
+import faceMagicHero from "@/assets/face-magic-hero.webp";
 import { toast } from "sonner";
 import { useCredits } from "@/hooks/useCredits";
 import { useIsMobile } from "@/hooks/use-mobile";

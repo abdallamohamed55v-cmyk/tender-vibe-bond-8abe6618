@@ -5,8 +5,8 @@ import { ArrowLeft, Download, Share2, RefreshCw, ImagePlus } from "lucide-react"
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useCredits } from "@/hooks/useCredits";
-import heroImg from "@/assets/tool-landing/thumbnail-generator-v8.jpg";
-import samplePoster from "@/assets/thumbnail-sample-boy-v2.jpg";
+import heroImg from "@/assets/tool-landing/thumbnail-generator-v8.webp";
+import samplePoster from "@/assets/thumbnail-sample-boy-v2.webp";
 
 type Stage = "compose" | "generating" | "result";
 

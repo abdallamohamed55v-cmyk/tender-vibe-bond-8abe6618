@@ -10,28 +10,28 @@ const megaProjects = [
     title: "The New Administrative Capital",
     description:
       "A $58 billion smart city spanning 700 square kilometers east of Cairo. Featuring Africa's tallest skyscraper, the Iconic Tower at 385 meters, a massive government district, international financial hub, and a green river park twice the size of New York's Central Park. The capital is designed to accommodate 6.5 million residents and serve as the new center of Egyptian governance and business.",
-    image: "/egypt/new-capital.jpg",
+    image: "/egypt/new-capital.webp",
     stats: ["700 km² total area", "$58B investment", "6.5M residents capacity"],
   },
   {
     title: "The New Suez Canal",
     description:
       "Completed in a record-breaking one year, the New Suez Canal expansion doubled the waterway's capacity, allowing two-way traffic for the first time in history. The project increased daily transit capacity from 49 to 97 ships and boosted annual revenues significantly. The Suez Canal Economic Zone (SCZone) surrounding it is attracting billions in foreign investment across manufacturing, logistics, and technology sectors.",
-    image: "/egypt/suez-canal.jpg",
+    image: "/egypt/suez-canal.webp",
     stats: ["72 km new channel", "97 ships daily", "$8B+ annual revenue"],
   },
   {
     title: "National Roads Network",
     description:
       "Egypt has built over 7,000 kilometers of new roads and 1,000+ bridges and tunnels, fundamentally transforming the country's infrastructure. The Rod El Farag Axis bridge holds the Guinness World Record as the widest cable-stayed bridge globally. These projects have reduced travel times dramatically, connected remote communities, and created a modern logistics backbone for economic growth.",
-    image: "/egypt/infrastructure.jpg",
+    image: "/egypt/infrastructure.webp",
     stats: ["7,000+ km new roads", "1,000+ bridges", "Guinness World Record bridge"],
   },
   {
     title: "Benban Solar Park",
     description:
       "One of the world's largest solar installations, Benban Solar Park in Aswan spans 37 square kilometers and generates 1.8 GW of clean energy. Egypt aims to produce 42% of its electricity from renewable sources by 2035. The country is also developing massive wind farms along the Red Sea coast and Gulf of Suez, positioning itself as Africa's renewable energy leader.",
-    image: "/egypt/renewable-energy.jpg",
+    image: "/egypt/renewable-energy.webp",
     stats: ["37 km² solar park", "1.8 GW capacity", "42% renewable target by 2035"],
   },
 ];
@@ -112,7 +112,7 @@ const EgyptPage = () => {
       {/* ===== HERO ===== */}
       <section className="relative min-h-[110vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
-          <img src="/egypt/pyramids-night.jpg" alt="The Great Pyramids of Giza at night" className="w-full h-full object-cover" />
+          <img src="/egypt/pyramids-night.webp" alt="The Great Pyramids of Giza at night" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background" />
         </div>
         <div className="relative z-10 text-center px-6 max-w-6xl mx-auto">
@@ -218,7 +218,7 @@ const EgyptPage = () => {
               transition={{ duration: 0.9 }}
             >
               <div className="relative rounded-2xl overflow-hidden aspect-[4/5]">
-                <img src="/egypt/luxor.jpg" alt="Luxor Temple at night" className="w-full h-full object-cover" />
+                <img src="/egypt/luxor.webp" alt="Luxor Temple at night" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
                 <div className="absolute bottom-8 left-8 right-8">
                   <p className="text-xs uppercase tracking-[0.2em] text-yellow-500/80 mb-2">Luxor Temple</p>
@@ -582,17 +582,17 @@ const EgyptPage = () => {
               {
                 title: "The Pyramids of Giza",
                 text: "The last surviving wonder of the ancient world. Built over 4,500 years ago, these monumental structures continue to inspire awe and wonder in millions of visitors annually.",
-                image: "/egypt/pyramids-night.jpg",
+                image: "/egypt/pyramids-night.webp",
               },
               {
                 title: "Luxor & The Valley of the Kings",
                 text: "The world's greatest open-air museum. Home to the tombs of pharaohs, the magnificent Karnak Temple complex, and the stunning Luxor Temple illuminated at night.",
-                image: "/egypt/luxor.jpg",
+                image: "/egypt/luxor.webp",
               },
               {
                 title: "The Grand Egyptian Museum",
                 text: "The world's largest archaeological museum, housing over 100,000 artifacts including the complete Tutankhamun collection. A new landmark for global tourism.",
-                image: "/egypt/hero-bg.jpg",
+                image: "/egypt/hero-bg.webp",
               },
             ].map((item, i) => (
               <motion.div

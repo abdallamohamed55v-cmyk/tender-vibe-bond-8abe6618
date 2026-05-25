@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Paintbrush, Eraser, Upload, Download, RotateCcw, Plus, ImagePlus, Undo2, Sparkles, X, Trash2, Wand2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import inpaintHero from "@/assets/inpaint-hero.jpg";
+import inpaintHero from "@/assets/inpaint-hero.webp";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 type Stage = "landing" | "edit" | "result";

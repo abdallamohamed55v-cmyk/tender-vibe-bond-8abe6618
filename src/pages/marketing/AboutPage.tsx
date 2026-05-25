@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import LandingNavbar from "@/components/landing/LandingNavbar";
 import LandingFooter from "@/components/landing/LandingFooter";
 import SEOHead from "@/components/common/SEOHead";
-import founderHamza from "@/assets/about-founder-hamza.png";
-import founderAbdalla from "@/assets/about-founder-abdalla.png";
-import heroCairo from "@/assets/about-cairo.jpg";
+import founderHamza from "@/assets/about-founder-hamza.webp";
+import founderAbdalla from "@/assets/about-founder-abdalla.webp";
+import heroCairo from "@/assets/about-cairo.webp";
 
 const founders = [
   {

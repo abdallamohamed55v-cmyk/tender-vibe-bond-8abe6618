@@ -41,18 +41,18 @@ const ASPECT_DIM_MAP: Record<string, ImageDimensions> = {
 
 // Fallback logos for known models
 const FALLBACK_LOGOS: Record<string, string> = {
-  "megsy-v1-img": "/model-logos/megsy.png",
+  "megsy-v1-img": "/model-logos/megsy.webp",
   "gpt-image": "/model-logos/openai.svg",
   "gpt-image-1": "/model-logos/openai.svg",
   "nano-banana-2": "/model-logos/google.ico",
   "nano-banana-pro": "/model-logos/google.ico",
-  "flux-kontext": "/model-logos/bfl.png",
-  "flux-2-pro": "/model-logos/bfl.png",
-  "fal-flux-realism": "/model-logos/bfl.png",
-  "ideogram-3": "/model-logos/ideogram.png",
+  "flux-kontext": "/model-logos/bfl.webp",
+  "flux-2-pro": "/model-logos/bfl.webp",
+  "fal-flux-realism": "/model-logos/bfl.webp",
+  "ideogram-3": "/model-logos/ideogram.webp",
   "seedream-4": "/model-logos/bytedance.ico",
   "seedream-5-lite": "/model-logos/bytedance.ico",
-  "recraft-v4": "/model-logos/recraft.png",
+  "recraft-v4": "/model-logos/recraft.webp",
   "grok-imagine": "/model-logos/xai.ico",
 };
 

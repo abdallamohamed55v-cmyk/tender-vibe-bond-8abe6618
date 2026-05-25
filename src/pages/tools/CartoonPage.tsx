@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Sparkles, Check, Download, Share2, RefreshCw, Upload, Loader2, Wand2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import cartoonHero from "@/assets/cartoon-hero.jpg";
+import cartoonHero from "@/assets/cartoon-hero.webp";
 import { toast } from "sonner";
 import { useCredits } from "@/hooks/useCredits";
 import { useToolTemplates } from "@/hooks/useToolTemplates";

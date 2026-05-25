@@ -7,8 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useCredits } from "@/hooks/useCredits";
 import { useIsMobile } from "@/hooks/use-mobile";
-import heroImg from "@/assets/tool-landing/auto-caption-v8.jpg";
-import samplePoster from "@/assets/auto-caption-sample-boy-v2.jpg";
+import heroImg from "@/assets/tool-landing/auto-caption-v8.webp";
+import samplePoster from "@/assets/auto-caption-sample-boy-v2.webp";
 
 type Stage = "landing" | "compose" | "generating" | "result";
 type CaptionStyle = "minimal" | "bold" | "neon" | "classic";

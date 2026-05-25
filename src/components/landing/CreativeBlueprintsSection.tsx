@@ -1,8 +1,8 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import card1 from "@/assets/blueprint-save-time.jpg";
-import card2 from "@/assets/blueprint-stay-consistent.jpg";
-import card3 from "@/assets/blueprint-go-further.jpg";
+import card1 from "@/assets/blueprint-save-time.webp";
+import card2 from "@/assets/blueprint-stay-consistent.webp";
+import card3 from "@/assets/blueprint-go-further.webp";
 
 const cards = [
   {

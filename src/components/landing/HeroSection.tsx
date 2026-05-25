@@ -4,11 +4,11 @@ import FancyButton from "@/components/branding/FancyButton";
 import { useLandingContent } from "@/lib/landing/LandingContentContext";
 
 const heroVideos = [
-  { src: "/hero/video-1.mp4", poster: "/hero/video-1.jpg", rotate: -6, y: 40 },
-  { src: "/hero/video-2.mp4", poster: "/hero/video-2.jpg", rotate: -3, y: 15 },
-  { src: "/hero/video-4.mp4", poster: "/hero/video-4.jpg", rotate: 0, y: 0, center: true },
-  { src: "/hero/video-3.mp4", poster: "/hero/video-3.jpg", rotate: 3, y: 15 },
-  { src: "/hero/bear.mp4", poster: "/hero/bear.jpg", rotate: 6, y: 40 },
+  { src: "/hero/video-1.mp4", poster: "/hero/video-1.webp", rotate: -6, y: 40 },
+  { src: "/hero/video-2.mp4", poster: "/hero/video-2.webp", rotate: -3, y: 15 },
+  { src: "/hero/video-4.mp4", poster: "/hero/video-4.webp", rotate: 0, y: 0, center: true },
+  { src: "/hero/video-3.mp4", poster: "/hero/video-3.webp", rotate: 3, y: 15 },
+  { src: "/hero/bear.mp4", poster: "/hero/bear.webp", rotate: 6, y: 40 },
 ];
 
 const HeroSection = () => {

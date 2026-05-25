@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useCredits } from "@/hooks/useCredits";
 import { useIsMobile } from "@/hooks/use-mobile";
-import logoHero from "@/assets/logo-generator-hero.jpg";
+import logoHero from "@/assets/logo-generator-hero.webp";
 
 type Stage = "landing" | "compose" | "generating" | "result";
 
