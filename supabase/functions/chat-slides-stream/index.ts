@@ -31,6 +31,7 @@ const REACT_TEMPLATES = new Set(["digital-oasis", "ocean-flow", "seasonal-scroll
 // Standard template IDs → premium HTML shell. Picked by visual affinity so the
 // user gets a real generated deck instead of an iframe to an external builder.
 const STANDARD_TO_PREMIUM: Record<string, string> = {
+  // Legacy aliases
   "standard-pitch":     "digital-oasis",
   "standard-corporate": "seasonal-scroll",
   "standard-education": "ocean-flow",
@@ -41,6 +42,28 @@ const STANDARD_TO_PREMIUM: Record<string, string> = {
   "standard-aethon":    "ocean-flow",
   "standard-solar":     "seasonal-scroll",
   "standard-turbo-930": "digital-oasis",
+};
+
+// Clean classic slide-by-slide standard templates. They share one HTML shell
+// (`standard-classic-deck`) but each has its own palette + variant; the deck
+// generation here just needs to pick the right palette so the planner/LLM gets
+// the colours right. The frontend overrides `htmlSlug` + `variant` from
+// slidesTemplates.ts after streaming.
+const CLASSIC_STANDARD_PALETTES: Record<string, { primary: string; accent: string; bg: string; fg: string }> = {
+  "classic-editorial-standard":  { primary: "#111111", accent: "#8a8478", bg: "#fafaf7", fg: "#111111" },
+  "classic-bold-standard":       { primary: "#ff5722", accent: "#ffeb3b", bg: "#0a0a0a", fg: "#f5f5f5" },
+  "classic-mono-standard":       { primary: "#9cf2a0", accent: "#9cf2a0", bg: "#0e0e10", fg: "#e6e6e6" },
+  "classic-glass-standard":      { primary: "#7aa2ff", accent: "#a78bfa", bg: "#e9efff", fg: "#0e1a3a" },
+  "classic-neon-standard":       { primary: "#22d3ee", accent: "#67e8f9", bg: "#070b1a", fg: "#e8f7fb" },
+  "classic-pastel-standard":     { primary: "#c084fc", accent: "#f9a8d4", bg: "#fdf2f8", fg: "#3a1a35" },
+  "classic-luxury-standard":     { primary: "#c9a84c", accent: "#f0d78c", bg: "#0e0e0e", fg: "#f5f0e0" },
+  "classic-brutalist-standard":  { primary: "#0a0a0a", accent: "#ff3b30", bg: "#ffffff", fg: "#0a0a0a" },
+  "classic-aurora-standard":     { primary: "#a78bfa", accent: "#67e8f9", bg: "#0a0a1a", fg: "#f0ecff" },
+  "classic-magazine-standard":   { primary: "#1a1714", accent: "#8a7355", bg: "#fafaf7", fg: "#1a1714" },
+  "classic-swiss-standard":      { primary: "#dc2626", accent: "#0a0a0a", bg: "#ffffff", fg: "#0a0a0a" },
+  "classic-kinetic-standard":    { primary: "#facc15", accent: "#f97316", bg: "#0a0a0a", fg: "#fafafa" },
+  "classic-blueprint-standard":  { primary: "#7dd3fc", accent: "#bae6fd", bg: "#0b1e3d", fg: "#eaf3ff" },
+  "classic-cinematic-standard":  { primary: "#f5f0e0", accent: "#c9a84c", bg: "#0a0a0a", fg: "#f5f0e0" },
 };
 
 const PALETTES: Record<string, { primary: string; accent: string; bg: string; fg: string }> = {
@@ -1297,15 +1320,20 @@ serve(async (req) => {
     });
   }
   const rawId = typeof templateId === "string" ? templateId : "";
+  const isClassicStandard = rawId in CLASSIC_STANDARD_PALETTES;
   const standardBase = rawId.endsWith("-standard") ? rawId.slice(0, -"-standard".length) : "";
-  const requestedTemplateId = standardBase && REACT_TEMPLATES.has(standardBase)
+  const requestedTemplateId = isClassicStandard
     ? rawId
-    : (REACT_TEMPLATES.has(rawId) ? rawId : "digital-oasis");
+    : standardBase && REACT_TEMPLATES.has(standardBase)
+      ? rawId
+      : (REACT_TEMPLATES.has(rawId) ? rawId : "digital-oasis");
   const mapped = STANDARD_TO_PREMIUM[rawId] || (standardBase && REACT_TEMPLATES.has(standardBase) ? standardBase : undefined);
-  const tplId = mapped
-    ? mapped
-    : (REACT_TEMPLATES.has(rawId) ? rawId : "digital-oasis");
-  const palette = PALETTES[tplId];
+  const tplId = isClassicStandard
+    ? rawId
+    : mapped
+      ? mapped
+      : (REACT_TEMPLATES.has(rawId) ? rawId : "digital-oasis");
+  const palette = isClassicStandard ? CLASSIC_STANDARD_PALETTES[rawId] : PALETTES[tplId];
 
   const isLongInput = topic.trim().length >= 400;
   const subject = isLongInput

@@ -32,7 +32,7 @@ import { friendlyUserMessage, reportError } from "@/lib/errors";
 
 import DeepResearchToggle from "@/components/research/DeepResearchToggle";
 import SlidesToggle from "@/components/chat/SlidesToggle";
-import { SLIDES_TEMPLATES, isPremiumHtml, isStandardSlides } from "@/lib/slidesTemplates";
+import { SLIDES_TEMPLATES, isPremiumHtml } from "@/lib/slidesTemplates";
 import type { SlideDeck } from "@/components/chat/SlidesDeckCard";
 import { DEFAULT_SLIDES_TEMPLATE, findSlidesTemplate } from "@/lib/slidesTemplates";
 import { authorizePremiumSlide, FREE_PREMIUM_SLIDES_PER_DAY } from "@/lib/slidesQuota";
@@ -3798,18 +3798,16 @@ Ask me anything to get started!`;
                   )}
                    {/* Slides deck card under assistant message in slides mode */}
                     {msg.role === "assistant" && msg.slidesDeck && (
-                      <div className="px-3 md:px-12">
-                        <Suspense fallback={null}>
-                          {isStandardSlides(msg.slidesDeck.templateId) ? (
-                            <SlidesDeckCard deck={msg.slidesDeck} />
-                          ) : isPremiumHtml(msg.slidesDeck.templateId) && (msg.slidesDeck as SlideDeck & { htmlSlug?: string }).htmlSlug ? (
-                            <SlidesHtmlDeckCard deck={msg.slidesDeck as SlideDeck & { htmlSlug: string }} />
-                          ) : (
-                            <SlidesDeckCard deck={msg.slidesDeck} />
-                          )}
-                        </Suspense>
-                      </div>
-                    )}
+                       <div className="px-3 md:px-12">
+                         <Suspense fallback={null}>
+                           {isPremiumHtml(msg.slidesDeck.templateId) && (msg.slidesDeck as SlideDeck & { htmlSlug?: string }).htmlSlug ? (
+                             <SlidesHtmlDeckCard deck={msg.slidesDeck as SlideDeck & { htmlSlug: string }} />
+                           ) : (
+                             <SlidesDeckCard deck={msg.slidesDeck} />
+                           )}
+                         </Suspense>
+                       </div>
+                     )}
                     {msg.role === "assistant" && msg.standardSlides && (
                       <div className="px-3 md:px-12">
                         <Suspense fallback={null}>
