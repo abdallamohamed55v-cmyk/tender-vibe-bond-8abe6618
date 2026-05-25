@@ -7691,7 +7691,11 @@ const SlidesHtmlDeckCard = ({ deck }: Props) => {
   // Listen for arrow-key / wheel events bubbled from the iframe so keyboard
   // navigation works after the user clicks inside the preview.
   useEffect(() => {
-    if (!open || orientation !== "horizontal") return;
+    if (!open) {
+      slideIndexRef.current = 0;
+      return;
+    }
+    if (orientation !== "horizontal") return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") {
         e.preventDefault();
