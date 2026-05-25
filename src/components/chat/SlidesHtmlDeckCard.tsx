@@ -7733,7 +7733,28 @@ const SlidesHtmlDeckCard = ({ deck }: Props) => {
   const presentationHtml = useMemo(() => {
     if (!finalHtml) return "";
     const orientationCss = orientation === "horizontal"
-      ? `html,body{height:100%!important;overflow:hidden!important;touch-action:pan-x!important}.lov-deck{height:100vh!important;min-height:100vh!important;display:flex!important;flex-direction:row!important;overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x mandatory!important;scroll-behavior:smooth!important;-webkit-overflow-scrolling:touch}.lov-deck::-webkit-scrollbar{display:none}.lov-section{width:100vw!important;min-width:100vw!important;height:100vh!important;min-height:100vh!important;scroll-snap-align:start!important;scroll-snap-stop:always!important;border-bottom:none!important;border-inline-end:1px solid color-mix(in oklab,var(--lov-fg) 8%,transparent)}@media(max-width:768px){.lov-section{height:100vh!important;min-height:100vh!important;overflow-y:auto!important}}`
+      ? `
+        html,body{height:100%!important;overflow:hidden!important;touch-action:pan-x!important;max-width:100vw!important}
+        .lov-deck{height:100vh!important;min-height:100vh!important;width:100vw!important;max-width:100vw!important;display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x mandatory!important;scroll-behavior:smooth!important;-webkit-overflow-scrolling:touch}
+        .lov-deck::-webkit-scrollbar{display:none}
+        .lov-section{width:100vw!important;min-width:100vw!important;max-width:100vw!important;height:100vh!important;min-height:100vh!important;flex:0 0 100vw!important;scroll-snap-align:start!important;scroll-snap-stop:always!important;border-bottom:none!important;border-inline-end:1px solid color-mix(in oklab,var(--lov-fg) 8%,transparent);overflow:hidden!important;padding:5vh 5vw!important;box-sizing:border-box!important}
+        .lov-section .lov-content,.lov-section .lov-grid,.lov-section .lov-stats-grid{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+        .lov-section .lov-grid{grid-template-columns:1fr!important;gap:2vh 0!important}
+        .lov-section .lov-h1,.lov-section .lov-h2,.lov-section .lov-subtitle,.lov-section .lov-body,.lov-section .lov-quote,.lov-section .lov-bullets li,.lov-section .lov-stat-value,.lov-section .lov-cite{max-width:100%!important;overflow-wrap:break-word!important;word-break:normal!important;hyphens:auto!important;min-width:0!important}
+        /* Aggressively cap headline size so long titles never bleed past the slide edge. */
+        .lov-section .lov-h1{font-size:clamp(28px,6.4vw,72px)!important;line-height:1.08!important;letter-spacing:-0.015em!important;text-transform:none!important;transform:none!important;text-shadow:none!important}
+        .lov-section .lov-h2{font-size:clamp(24px,5.2vw,56px)!important;line-height:1.12!important;letter-spacing:-0.01em!important;text-transform:none!important;transform:none!important}
+        .lov-section .lov-subtitle{font-size:clamp(15px,2.4vw,24px)!important;line-height:1.4!important;max-width:90%!important}
+        .lov-section .lov-body,.lov-section .lov-bullets li{font-size:clamp(14px,2vw,20px)!important;line-height:1.55!important}
+        .lov-section .lov-kicker{font-size:clamp(10px,1.4vw,14px)!important;letter-spacing:0.22em!important}
+        .lov-section .lov-stat-value{font-size:clamp(32px,7vw,80px)!important;line-height:1!important}
+        .lov-section .lov-quote{font-size:clamp(20px,3.6vw,40px)!important;line-height:1.25!important}
+        .lov-section .lov-quote-mark{font-size:clamp(60px,10vw,120px)!important}
+        .lov-section .lov-media{max-height:32vh!important;aspect-ratio:16/10!important}
+        .lov-section img{max-width:100%!important;max-height:32vh!important;object-fit:cover!important}
+        .lov-section .lov-stats-grid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))!important;gap:1.2rem!important;margin-top:1rem!important}
+        .lov-deck .lov-section.lov-cover .lov-cover-bg{opacity:0.35!important}
+      `
       : `html,body{overflow-x:hidden!important;overflow-y:auto!important;touch-action:pan-y!important}.lov-deck{display:block!important;overflow:visible!important}.lov-section{scroll-snap-align:start}`;
     return finalHtml.replace("</head>", `<style id="lov-orientation-mode">${orientationCss}</style></head>`);
   }, [finalHtml, orientation]);
