@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, CornerDownLeft } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
-const STORAGE_KEY = "agents_onboarding_v1";
 const PHASE_CHIPS = "chips";
 const PHASE_HINT = "hint";
 const PHASE_DONE = "done";
@@ -73,10 +73,18 @@ const AgentsOnboarding = ({ alwaysShow = false, activeAgentId = null, onAgentTog
 
   useEffect(() => {
     if (alwaysShow) return;
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (!saved) setPhase(PHASE_CHIPS);
-    } catch {}
+    (async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) { setPhase(PHASE_CHIPS); return; }
+        const { data } = await supabase
+          .from("profiles")
+          .select("agents_onboarding_seen")
+          .eq("id", user.id)
+          .maybeSingle();
+        if (!(data as any)?.agents_onboarding_seen) setPhase(PHASE_CHIPS);
+      } catch { setPhase(PHASE_CHIPS); }
+    })();
   }, [alwaysShow]);
 
   useEffect(() => {
@@ -87,7 +95,12 @@ const AgentsOnboarding = ({ alwaysShow = false, activeAgentId = null, onAgentTog
   }, [phase]);
 
   const finish = () => {
-    try { localStorage.setItem(STORAGE_KEY, "1"); } catch {}
+    (async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) await supabase.from("profiles").update({ agents_onboarding_seen: true } as any).eq("id", user.id);
+      } catch { /* ignore */ }
+    })();
     setPhase(PHASE_DONE);
   };
 

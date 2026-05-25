@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { openWorkspaceCheckout } from "@/lib/workspaceCheckout";
 import { isWorkspacePaidPlan, WORKSPACE_PLANS } from "@/lib/workspacePlans";
+import { setActiveWorkspaceId } from "@/lib/activeWorkspace";
 
 type Step = "name" | "plan";
 
