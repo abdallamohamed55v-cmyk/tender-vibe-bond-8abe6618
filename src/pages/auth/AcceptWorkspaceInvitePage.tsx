@@ -43,7 +43,11 @@ export default function AcceptWorkspaceInvitePage() {
     const r = data as any;
     if (!r?.success) { toast.error(r?.error || "Failed"); return; }
     toast.success("Joined workspace!");
-    try { localStorage.setItem("megsy_active_workspace_id", r.workspace_id); } catch {}
+    try {
+      await supabase.from("profiles").update({ active_workspace_id: r.workspace_id } as any).eq("id", user.id);
+      const { setActiveWorkspaceId } = await import("@/lib/activeWorkspace");
+      setActiveWorkspaceId(r.workspace_id);
+    } catch { /* ignore */ }
     navigate(`/settings/workspaces/${r.workspace_id}`);
   };
 
