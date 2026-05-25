@@ -1320,15 +1320,20 @@ serve(async (req) => {
     });
   }
   const rawId = typeof templateId === "string" ? templateId : "";
+  const isClassicStandard = rawId in CLASSIC_STANDARD_PALETTES;
   const standardBase = rawId.endsWith("-standard") ? rawId.slice(0, -"-standard".length) : "";
-  const requestedTemplateId = standardBase && REACT_TEMPLATES.has(standardBase)
+  const requestedTemplateId = isClassicStandard
     ? rawId
-    : (REACT_TEMPLATES.has(rawId) ? rawId : "digital-oasis");
+    : standardBase && REACT_TEMPLATES.has(standardBase)
+      ? rawId
+      : (REACT_TEMPLATES.has(rawId) ? rawId : "digital-oasis");
   const mapped = STANDARD_TO_PREMIUM[rawId] || (standardBase && REACT_TEMPLATES.has(standardBase) ? standardBase : undefined);
-  const tplId = mapped
-    ? mapped
-    : (REACT_TEMPLATES.has(rawId) ? rawId : "digital-oasis");
-  const palette = PALETTES[tplId];
+  const tplId = isClassicStandard
+    ? rawId
+    : mapped
+      ? mapped
+      : (REACT_TEMPLATES.has(rawId) ? rawId : "digital-oasis");
+  const palette = isClassicStandard ? CLASSIC_STANDARD_PALETTES[rawId] : PALETTES[tplId];
 
   const isLongInput = topic.trim().length >= 400;
   const subject = isLongInput
