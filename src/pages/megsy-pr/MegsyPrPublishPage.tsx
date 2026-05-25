@@ -114,9 +114,6 @@ export default function MegsyPrPublishPage({ onClose, onPublished }: Props = {})
         favicon: seo.favicon,
         visibility,
       };
-      try {
-        localStorage.setItem(`publish:${projectId}`, JSON.stringify(settings));
-      } catch { /* noop */ }
 
       // Persist publish settings + visibility to DB so they're authoritative.
       await supabase
@@ -160,7 +157,6 @@ export default function MegsyPrPublishPage({ onClose, onPublished }: Props = {})
         favicon: seo.favicon,
         visibility,
       };
-      try { localStorage.setItem(`publish:${projectId}`, JSON.stringify(settings)); } catch { /* noop */ }
 
       await supabase
         .from("projects")
