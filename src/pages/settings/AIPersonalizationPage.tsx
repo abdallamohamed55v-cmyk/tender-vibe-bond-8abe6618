@@ -133,7 +133,6 @@ export default function AIPersonalizationPage() {
     const { error } = await supabase.from("ai_personalization").upsert(payload, { onConflict: "user_id" });
     setSaving(false);
     if (error) { toast.error("Failed to save"); return; }
-    localStorage.setItem("megsy_tier", preferredTier);
     setSavedSnapshot(currentSnapshot);
     savedSnapshotRef.current = currentSnapshot;
     toast.success("Saved");
