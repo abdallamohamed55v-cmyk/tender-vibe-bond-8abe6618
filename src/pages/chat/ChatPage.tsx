@@ -21,7 +21,7 @@ import FancyButton from "@/components/branding/FancyButton";
 import type { AgentDef, AgentModel } from "@/lib/agentRegistry";
 
 import { streamChat } from "@/lib/streamChat";
-import { addActiveChatJob, removeActiveChatJob, getActiveChatJobs } from "@/lib/jobs/chatResume";
+import { addActiveChatJob, removeActiveChatJob, getActiveChatJobs, hydrateActiveChatJobs } from "@/lib/jobs/chatResume";
 import { resumeJob as resumeBgJob, failStaleJob } from "@/lib/jobs/client";
 import { getActiveWorkspaceId } from "@/lib/activeWorkspace";
 import { shouldUseWebSearch } from "@/lib/shouldUseWebSearch";
@@ -842,7 +842,7 @@ const ChatPage = () => {
               });
             }
           }
-          // localStorage-sourced (skip ones already covered by DB)
+          // In-memory tab pointers (hydrated from background_jobs on mount)
           const localPending = getActiveChatJobs(id);
           for (const p of localPending) {
             if (entries.some((e) => e.jobId === p.jobId)) continue;
