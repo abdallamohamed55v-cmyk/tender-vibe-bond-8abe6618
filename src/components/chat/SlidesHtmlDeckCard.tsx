@@ -7889,7 +7889,7 @@ const SlidesHtmlDeckCard = ({ deck }: Props) => {
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
               <iframe
                 title={`${deck.title} preview`}
-                srcDoc={finalHtml}
+                srcDoc={presentationHtml || finalHtml}
                 sandbox="allow-scripts allow-same-origin"
                 scrolling="no"
                 aria-hidden="true"
