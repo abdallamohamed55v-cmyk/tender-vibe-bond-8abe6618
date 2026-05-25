@@ -806,7 +806,7 @@ serve(async (req) => {
     // Detect casual early to skip expensive context fetching
     const isCasualEarly = /^(هلا|اهلا|هاي|مرحبا|السلام|سلام|hi|hello|hey|yo|sup|thanks|شكرا|تمام|ok|اوك|good|كويس|ازيك|عامل ايه|كيفك|صباح|مساء|bye|وداعا|ايوه|لا)\b/i.test(latestUserText.trim()) && latestUserText.trim().split(/\s+/).length <= 5;
 
-    if (user_id && !isCasualEarly) {
+    if (user_id) {
       try {
         const [profileRes, personalizationRes, memoriesRes, kgRes] = await Promise.all([
           sb.from("profiles").select("display_name, plan, credits").eq("id", user_id).single(),
