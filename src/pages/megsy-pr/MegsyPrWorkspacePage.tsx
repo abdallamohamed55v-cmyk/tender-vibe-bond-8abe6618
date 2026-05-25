@@ -11,6 +11,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import MobileChatView from "@/components/megsy-pr/MobileChatView";
 import MobilePreviewView from "@/components/megsy-pr/MobilePreviewView";
 import AppSidebar from "@/components/layout/AppSidebar";
+import { getProjectDraft, saveProjectDraftDebounced } from "@/lib/projectDrafts";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 
@@ -38,10 +39,7 @@ export default function MegsyPrWorkspacePage() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [files, setFiles] = useState<BuildFile[]>([]);
   const [activeFile, setActiveFile] = useState<string | null>(null);
-  const [input, setInput] = useState(() => {
-    if (typeof window === "undefined") return "";
-    try { return localStorage.getItem(`draft:${window.location.pathname}`) || ""; } catch { return ""; }
-  });
+  const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
   const [step, setStep] = useState<string>("");
   const [tab, setTab] = useState<"preview" | "code" | "console" | "github" | "snapshots" | "cost" | "visits" | "supabase" | "domains" | "versions" | "visual">("preview");
@@ -126,19 +124,21 @@ export default function MegsyPrWorkspacePage() {
   // Preview is served from Cloudflare (deploy("preview")) instead of the e2b sandbox.
   // E2B sandbox auto-start is intentionally disabled here.
 
-  // Persist draft input per project (never lose what user typed)
+  // Persist draft input per project to Supabase (debounced)
   useEffect(() => {
     if (!projectId) return;
-    try { localStorage.setItem(`draft:${projectId}`, input); } catch { /* noop */ }
+    saveProjectDraftDebounced(projectId, input);
   }, [input, projectId]);
 
-  // Restore draft when project changes
+  // Restore draft from Supabase when project changes
   useEffect(() => {
     if (!projectId) return;
-    try {
-      const saved = localStorage.getItem(`draft:${projectId}`);
-      if (saved && !input) setInput(saved);
-    } catch { /* noop */ }
+    let cancelled = false;
+    (async () => {
+      const saved = await getProjectDraft(projectId);
+      if (!cancelled && saved && !input) setInput(saved);
+    })();
+    return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
