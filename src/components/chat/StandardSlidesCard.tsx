@@ -20,43 +20,43 @@ const StandardSlidesCard = ({ title, templateName, url, colors }: Props) => {
 
   return (
     <>
-      <div className="mt-3 rounded-2xl overflow-hidden border border-border/40 bg-card max-w-xl">
+      <div className="mt-3 group relative max-w-[420px] rounded-[2rem] overflow-hidden bg-zinc-950 border border-white/5 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] transition-all duration-700 hover:border-white/10">
         <button
           onClick={() => setOpen(true)}
-          className="relative block w-full aspect-[16/9] overflow-hidden group"
+          className="relative block w-full aspect-[16/9] overflow-hidden"
           style={{ background: gradient }}
         >
-          <div className="absolute inset-0 bg-black/30" />
-          <div className="absolute inset-0 flex flex-col justify-end p-5 text-white">
-            <div className="text-[11px] font-bold uppercase tracking-[0.3em] opacity-90 mb-1.5">
-              <Layers className="inline w-3 h-3 mr-1.5 -mt-0.5" />
-              Standard · {templateName}
-            </div>
-            <h3 className="text-xl md:text-2xl font-extrabold line-clamp-2">{title}</h3>
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent pointer-events-none" />
+          <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white">
+            <Layers className="w-3 h-3" />
+            العادي
+          </span>
+          <div className="absolute bottom-4 left-5 right-5 text-left">
+            <h3 className="text-lg font-extrabold text-white line-clamp-2 tracking-tight">{title}</h3>
+            <p className="text-[11px] text-white/60 mt-1 truncate">{templateName}</p>
           </div>
-          <div className="absolute top-3 right-3 inline-flex items-center gap-1 rounded-full bg-black/40 backdrop-blur px-2.5 py-1 text-[11px] font-medium text-white opacity-0 group-hover:opacity-100 transition">
+          <div className="absolute top-4 right-4 inline-flex items-center gap-1 rounded-full bg-black/50 backdrop-blur px-2.5 py-1 text-[11px] font-medium text-white opacity-0 group-hover:opacity-100 transition">
             <Maximize2 className="w-3 h-3" /> Open
           </div>
         </button>
 
-        <div className="flex items-center justify-between px-3 py-2 border-t border-border/40 bg-background/40">
-          <div className="text-xs text-muted-foreground truncate">{templateName}</div>
-          <div className="flex items-center gap-1.5">
-            <button
-              onClick={() => setOpen(true)}
-              className="text-xs font-semibold px-3 py-1.5 rounded-full bg-foreground text-background hover:opacity-90 transition"
-            >
-              Open
-            </button>
-            <a
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-full border border-border/60 hover:bg-muted/40 transition"
-            >
-              <ExternalLink className="w-3 h-3" /> New tab
-            </a>
-          </div>
+        <div className="px-6 pb-6 pt-4 flex flex-col gap-3">
+          <button
+            onClick={() => setOpen(true)}
+            className="w-full flex items-center justify-center gap-2 py-3.5 bg-white text-black font-semibold rounded-2xl transition-all active:scale-[0.97] hover:bg-zinc-100 shadow-lg text-[14px] tracking-tight"
+          >
+            <Maximize2 className="w-4 h-4" />
+            Open in preview
+          </button>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full flex items-center justify-center gap-2 py-3.5 bg-zinc-900 text-zinc-400 hover:text-white font-medium rounded-2xl border border-white/5 transition-all hover:bg-zinc-800 active:scale-[0.97] text-[14px] tracking-tight"
+          >
+            <ExternalLink className="w-4 h-4" />
+            Open in web
+          </a>
         </div>
       </div>
 
