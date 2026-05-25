@@ -314,26 +314,15 @@ const ChatPage = () => {
   const [mobileGreeting] = useState(() => Math.floor(Math.random() * 8));
   const [mobileGreetingColor] = useState(() => Math.floor(Math.random() * 8));
   // First visit = show original English playful greetings. Subsequent visits = Arabic time-of-day rotation.
-  const [isFirstVisit] = useState(() => {
-    if (typeof window === "undefined") return true;
-    try {
-      const seen = localStorage.getItem("megsy_chat_greeted");
-      if (!seen) {
-        localStorage.setItem("megsy_chat_greeted", "1");
-        return true;
-      }
-      return false;
-    } catch { return true; }
-  });
+  // Source of truth is profiles.chat_greeted (DB). We default to "returning" to avoid flashing
+  // the first-time greeting on subsequent visits while the DB lookup is in flight.
+  const [isFirstVisit, setIsFirstVisit] = useState(false);
   const [returningGreetingIdx] = useState(() => Math.floor(Math.random() * 4));
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [conversationTitle, setConversationTitle] = useState("");
   const [searchEnabled, setSearchEnabled] = useState(true);
   const { mySkills, librarySkills, enabledSkills, toggleEnabled } = useSkills();
-  const [megsyTier, setMegsyTier] = useState<"lite" | "pro" | "max">(() => {
-    if (typeof window === "undefined") return "lite";
-    return (localStorage.getItem("megsy_tier") as any) || "lite";
-  });
+  const [megsyTier, setMegsyTier] = useState<"lite" | "pro" | "max">("lite");
   const [userPlan, setUserPlan] = useState<string>("free");
   const [computerUseEnabled, setComputerUseEnabled] = useState(true);
   const [chatMode, setChatMode] = useState<ChatMode>("normal");
@@ -470,7 +459,16 @@ const ChatPage = () => {
       const prefTier = (pers as any)?.preferred_tier;
       if (prefTier && ["lite", "pro", "max"].includes(prefTier)) {
         setMegsyTier(prefTier as any);
-        localStorage.setItem("megsy_tier", prefTier);
+      }
+      // Hydrate first-visit greeting flag from DB; mark it true on first ever load.
+      const { data: prof } = await supabase
+        .from("profiles")
+        .select("chat_greeted")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (!(prof as any)?.chat_greeted) {
+        setIsFirstVisit(true);
+        await supabase.from("profiles").update({ chat_greeted: true } as any).eq("id", user.id);
       }
     });
   }, []);
@@ -3062,7 +3060,6 @@ Ask me anything to get started!`;
                           return;
                         }
                         setMegsyTier(t.id);
-                        localStorage.setItem("megsy_tier", t.id);
                         if (chatUserId) {
                           supabase.from("ai_personalization").upsert({ user_id: chatUserId, preferred_tier: t.id } as any, { onConflict: "user_id" }).then(() => {});
                         }

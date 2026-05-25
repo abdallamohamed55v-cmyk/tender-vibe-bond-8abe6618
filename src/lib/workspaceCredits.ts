@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { getActiveWorkspaceId, hydrateActiveWorkspaceFromDB } from "@/lib/activeWorkspace";
 
 /**
  * Deduct credits — uses workspace credits if user has an active workspace,
@@ -11,8 +12,9 @@ export async function spendCredits(amount: number, actionType: string, descripti
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { success: false, error: "auth_required" };
 
-  let activeWs: string | null = null;
-  try { activeWs = localStorage.getItem("megsy_active_workspace_id"); } catch {}
+  // Active workspace is hydrated from profiles.active_workspace_id (DB).
+  let activeWs = getActiveWorkspaceId();
+  if (!activeWs) activeWs = await hydrateActiveWorkspaceFromDB();
 
   if (activeWs) {
     const { data, error } = await supabase.rpc("workspace_deduct_credits" as any, {

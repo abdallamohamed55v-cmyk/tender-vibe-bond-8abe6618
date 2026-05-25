@@ -3417,7 +3417,9 @@ export type Database = {
       profiles: {
         Row: {
           active_workspace_id: string | null
+          agents_onboarding_seen: boolean
           avatar_url: string | null
+          chat_greeted: boolean
           created_at: string
           credits: number
           display_name: string | null
@@ -3428,7 +3430,9 @@ export type Database = {
         }
         Insert: {
           active_workspace_id?: string | null
+          agents_onboarding_seen?: boolean
           avatar_url?: string | null
+          chat_greeted?: boolean
           created_at?: string
           credits?: number
           display_name?: string | null
@@ -3439,7 +3443,9 @@ export type Database = {
         }
         Update: {
           active_workspace_id?: string | null
+          agents_onboarding_seen?: boolean
           avatar_url?: string | null
+          chat_greeted?: boolean
           created_at?: string
           credits?: number
           display_name?: string | null

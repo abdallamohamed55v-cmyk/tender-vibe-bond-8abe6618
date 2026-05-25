@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { openWorkspaceCheckout } from "@/lib/workspaceCheckout";
 import { isWorkspacePaidPlan, WORKSPACE_PLANS } from "@/lib/workspacePlans";
+import { setActiveWorkspaceId } from "@/lib/activeWorkspace";
 
 type Step = "name" | "plan";
 
@@ -39,7 +40,9 @@ export default function WorkspaceCreatePage() {
 
     setSubmitting(false);
     if (error) { toast.error(error.message); return; }
-    try { localStorage.setItem("megsy_active_workspace_id", (data as any).id); } catch {}
+    // Persist active workspace in DB (source of truth).
+    await supabase.from("profiles").update({ active_workspace_id: (data as any).id } as any).eq("id", user.id);
+    setActiveWorkspaceId((data as any).id);
     try { sessionStorage.removeItem("megsy_pending_workspace_name"); } catch {}
     toast.success("Workspace created");
     navigate(`/settings/workspaces/${(data as any).id}`);

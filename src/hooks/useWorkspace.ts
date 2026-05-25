@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { setActiveWorkspaceId } from "@/lib/activeWorkspace";
+import { setActiveWorkspaceId, hydrateActiveWorkspaceFromDB, getActiveWorkspaceId } from "@/lib/activeWorkspace";
 
 export interface Workspace {
   id: string;
@@ -22,18 +22,17 @@ export interface WorkspaceMember {
   joined_at: string;
 }
 
-const ACTIVE_KEY = "megsy_active_workspace_id";
-
 export function useWorkspaces() {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
-  const [activeId, setActiveIdState] = useState<string | null>(() => {
-    try { return localStorage.getItem(ACTIVE_KEY); } catch { return null; }
-  });
+  const [activeId, setActiveIdState] = useState<string | null>(() => getActiveWorkspaceId());
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { setLoading(false); return; }
+    // Hydrate active id from DB on first load.
+    const hydrated = await hydrateActiveWorkspaceFromDB();
+    if (hydrated !== activeId) setActiveIdState(hydrated);
     const { data: members } = await supabase
       .from("workspace_members")
       .select("workspace_id")
@@ -47,6 +46,7 @@ export function useWorkspaces() {
       .order("created_at", { ascending: true });
     setWorkspaces((ws as any) ?? []);
     setLoading(false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => { refresh(); }, [refresh]);
