@@ -904,113 +904,19 @@ const ChatMessage = ({ role, content, messageIndex, isStreaming, isThinking, ima
             // While a deep-research report is still streaming, wrap the live text
             // in a simple "live draft" box so it doesn't look like the final answer.
             const inner = (
-              <div dir={langDir(al)} lang={al === "ar" ? "ar" : al === "en" ? "en" : undefined} className={`prose-chat text-foreground lang-${al} ${showSlidesInfoBox ? "slides-info-prose" : ""}`}>
+              <div dir={langDir(al)} lang={al === "ar" ? "ar" : al === "en" ? "en" : undefined} className={`prose-chat text-foreground lang-${al}`}>
                 <MarkdownRenderer content={displayContent} onLinkClick={handleLinkClick} onPreviewCode={handlePreviewCode} />
               </div>
             );
             if (showSlidesInfoBox) {
-              const isAr = al === "ar";
-              const outline = parseSlidesOutline(displayContent);
-              const hasSteps = outline.steps.length > 0;
-              const lastStepIdx = outline.steps.length - 1;
               return (
-                <div className="slides-info-box rounded-2xl border border-border/40 bg-card/40 backdrop-blur-xl overflow-hidden shadow-2xl shadow-primary/5" dir={langDir(al)}>
-                  <button
-                    type="button"
-                    onClick={() => setSlidesInfoOpen((v) => !v)}
-                    className="w-full flex items-center justify-between gap-3 px-5 py-3.5 border-b border-border/30 bg-foreground/[0.01] hover:bg-foreground/[0.03] transition"
-                  >
-                    <span className="flex items-center gap-3 min-w-0">
-                      <span className="text-[13px] font-medium text-foreground/90 tracking-wide truncate">
-                        {"Presentation outline"}
-                      </span>
-                      {hasSteps && (
-                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-foreground/10 text-foreground/60 shrink-0">
-                          {outline.steps.length}
-                        </span>
-                      )}
-                    </span>
-                    <ChevronDown className={`w-[18px] h-[18px] text-muted-foreground/60 transition-transform ${slidesInfoOpen ? "" : "-rotate-90"}`} />
-                  </button>
-                  <AnimatePresence initial={false}>
-                    {slidesInfoOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="slides-info-scroll p-5 space-y-5">
-                          {hasSteps ? (
-                            <>
-                              {outline.intro && (
-                                <p className="text-[13px] leading-relaxed text-muted-foreground/90">{outline.intro}</p>
-                              )}
-                              <div className="space-y-1.5">
-                                {outline.steps.map((step, i) => {
-                                  const isActive = i === lastStepIdx;
-                                  return (
-                                    <div
-                                      key={i}
-                                      className={`group flex items-center gap-4 px-3 py-2.5 rounded-xl transition-colors ${
-                                        isActive
-                                          ? "bg-primary/10 border border-primary/20"
-                                          : "hover:bg-foreground/[0.02]"
-                                      }`}
-                                    >
-                                      <span
-                                        className={`text-[11px] font-mono shrink-0 ${
-                                          isActive ? "text-primary" : "text-muted-foreground/50 group-hover:text-muted-foreground"
-                                        }`}
-                                      >
-                                        {String(i + 1).padStart(2, "0")}
-                                      </span>
-                                      <span
-                                        className={`text-[13px] flex-1 min-w-0 truncate ${
-                                          isActive ? "text-foreground font-medium" : "text-foreground/80"
-                                        }`}
-                                      >
-                                        {step.title}
-                                      </span>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </>
-                          ) : null}
-                          <button
-                            type="button"
-                            onClick={() => setSummaryOpen((v) => !v)}
-                            className="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl border border-border/30 bg-foreground/[0.02] hover:bg-foreground/[0.04] transition"
-                          >
-                            <span className="text-[13px] font-medium text-foreground/80">
-                              {summaryOpen ? "Hide full text" : "Show full text"}
-                            </span>
-                            <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${summaryOpen ? "" : "-rotate-90"}`} />
-                          </button>
-                          <AnimatePresence initial={false}>
-                            {summaryOpen && (
-                              <motion.div
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: "auto", opacity: 1 }}
-                                exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.2 }}
-                                className="overflow-hidden"
-                              >
-                                <div className="pt-1">
-                                  {inner}
-                                </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                  <div className="h-[2px] w-full bg-foreground/[0.05] overflow-hidden relative">
-                    <div className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-primary to-transparent animate-slides-shimmer" />
-                  </div>
+                <div className="space-y-2">
+                  {inner}
+                  {isStreaming && (
+                    <div className="h-[1px] w-full bg-foreground/[0.05] overflow-hidden relative">
+                      <div className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-primary to-transparent animate-slides-shimmer" />
+                    </div>
+                  )}
                 </div>
               );
             }
