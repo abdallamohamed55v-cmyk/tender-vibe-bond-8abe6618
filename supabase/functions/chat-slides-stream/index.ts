@@ -770,22 +770,139 @@ function guaranteeMinimumSlideContent(slides: Array<Record<string, unknown>>, su
   });
 }
 
-function enforceDigitalOasisVariety(slides: Array<Record<string, unknown>>, tplId: string): Array<Record<string, unknown>> {
-  if (tplId !== "digital-oasis") return slides;
-  const cycle = ["definition", "bento", "pillars", "split-right", "centered", "two-col", "process", "stat-cluster", "comparison", "left-aligned-hero"];
-  let lastLayout = "";
+/**
+ * Composition families — must mirror src/lib/slides/layouts.ts.
+ * Used by the variety enforcer to prevent two visually-similar layouts from
+ * appearing within a short window even when their layout ids differ.
+ */
+const LAYOUT_FAMILY: Record<string, string> = {
+  "split-right": "split-image", "split-left": "split-image", "diagonal-split": "split-image",
+  "hero-image-right": "split-image", "hero-image-left": "split-image",
+  "split-image-stack": "split-image", "split-image-bleed": "split-image",
+  "image-full": "image-hero", "focus-image": "image-hero",
+  "image-card-overlay": "image-hero", "image-quote-overlay": "image-hero",
+  "image-top": "image-stack", "image-bottom": "image-stack",
+  "image-strip-top": "image-stack", "image-strip-bottom": "image-stack",
+  "image-side-card": "image-card", "polaroid": "image-card",
+  "image-with-stats": "image-card", "image-with-caption": "image-card",
+  "magazine-cover": "editorial",
+  "centered": "centered-text", "centered-narrow": "centered-text",
+  "centered-eyebrow": "centered-text", "drop-cap-paragraph": "centered-text",
+  "left-aligned-hero": "hero-text", "right-aligned-hero": "hero-text",
+  "title-with-rule": "hero-text", "asymmetric-title": "hero-text",
+  "split-title-body": "hero-text", "indented-statement": "hero-text",
+  "definition": "definition",
+  "manifesto": "statement", "poster-typo": "statement", "callout": "statement",
+  "oversized-title": "statement", "framed-title": "statement", "stacked-statement": "statement",
+  "pull-quote": "quote", "dialogue-block": "quote",
+  "two-col": "columns", "three-col": "columns", "four-col": "columns",
+  "two-col-divided": "columns", "three-col-numbered": "columns", "kanban-cols": "columns",
+  "bento": "bento", "masonry-cards": "bento",
+  "asymmetric-bento": "bento", "feature-grid-2x2": "bento", "feature-grid-3x2": "bento",
+  "pillars": "cards", "icon-grid": "cards", "ribbon-cards": "cards",
+  "vertical-cards": "cards", "horizontal-strips": "cards",
+  "card-list": "cards", "tiled-grid": "cards",
+  "comparison": "compare", "before-after": "compare", "vs-split": "compare",
+  "pros-cons": "compare", "side-by-side-cards": "compare", "old-vs-new": "compare",
+  "table-compare": "table", "matrix-2x2": "table", "competitor-table": "table",
+  "big-number": "hero-stat", "stat-hero": "hero-stat", "trend-callout": "hero-stat",
+  "stat-cluster": "stat-grid", "stat-circles": "stat-grid",
+  "stat-pair": "stat-grid", "stat-grid-4": "stat-grid",
+  "metric-card": "stat-grid", "ranking-list": "stat-grid",
+  "kpi-strip": "stat-strip", "stat-row": "stat-strip", "percentage-bar": "stat-strip",
+  "process": "process", "step-vertical": "process", "numbered-list": "process",
+  "phases": "process", "decision-tree": "process", "flow-arrows": "process",
+  "timeline": "timeline", "timeline-horizontal": "timeline", "story-rows": "timeline",
+  "milestone-row": "timeline", "roadmap": "timeline",
+  "swim-lanes": "timeline", "story-chapters": "timeline",
+  "gallery": "gallery", "image-grid-2": "gallery", "image-grid-4": "gallery",
+  "carousel-strip": "gallery", "image-mosaic-3": "gallery", "image-mosaic-5": "gallery",
+  "image-quote-pair": "gallery", "image-stats-pair": "gallery", "image-grid-6": "gallery",
+};
+
+function layoutFamily(layout: string): string {
+  return LAYOUT_FAMILY[layout] ?? layout ?? "unknown";
+}
+
+/**
+ * Variety cycles per template — each cycle covers a wide cross-section of
+ * families so consecutive picks naturally vary in composition. The enforcer
+ * uses the cycle only as a fallback when the AI-picked layout would repeat.
+ */
+const VARIETY_CYCLES: Record<string, string[]> = {
+  "digital-oasis":   ["split-right","bento","stat-hero","timeline-horizontal","pull-quote","two-col","feature-grid-2x2","step-vertical","comparison","centered","image-mosaic-3","big-number","story-chapters","pillars","oversized-title"],
+  "ocean-flow":      ["focus-image","kpi-strip","split-image-bleed","manifesto","pros-cons","story-rows","stat-grid-4","gallery","centered-eyebrow","ranking-list","image-quote-overlay","numbered-list","matrix-2x2","horizontal-strips","framed-title"],
+  "seasonal-scroll": ["magazine-cover","drop-cap-paragraph","image-grid-4","timeline","stat-pair","split-left","callout","feature-grid-3x2","vs-split","gallery","centered-narrow","phases","trend-callout","tiled-grid","title-with-rule"],
+  "vanta-atelier":   ["editorial","split-image-stack","big-number","dialogue-block","matrix-2x2","timeline","ranking-list","image-with-stats","stacked-statement","competitor-table","story-rows","pull-quote","gallery","two-col-divided","stat-circles"],
+  "default":         ["split-right","bento","big-number","timeline-horizontal","pull-quote","two-col","comparison","step-vertical","pillars","centered","image-grid-2","stat-cluster","story-rows","feature-grid-2x2","manifesto","matrix-2x2","gallery","oversized-title","kanban-cols","phases"],
+};
+
+const VARIANT_CYCLE = ["default", "glass", "outline", "filled", "gradient", "neon", "paper", "mono"];
+const ACCENT_CYCLE  = ["none", "top", "left", "corner", "underline", "side-bar"];
+
+/**
+ * Enforce visual variety across ALL templates:
+ *  1. No layout id may repeat inside a 4-slide rolling window.
+ *  2. No composition FAMILY may repeat inside a 2-slide rolling window.
+ *  3. variant and accent rotate so consecutive slides never share both.
+ * When a repeat is detected, the next candidate is pulled from the template's
+ * variety cycle, skipping anything already in either window.
+ */
+function enforceLayoutVariety(slides: Array<Record<string, unknown>>, tplId: string): Array<Record<string, unknown>> {
+  const cycle = VARIETY_CYCLES[tplId] ?? VARIETY_CYCLES.default;
+  const layoutWindow: string[] = [];
+  const familyWindow: string[] = [];
+  let lastVariant = "";
+  let lastAccent = "";
+
+  const pickFromCycle = (idx: number): string => {
+    for (let off = 0; off < cycle.length; off++) {
+      const cand = cycle[(idx + off) % cycle.length];
+      if (layoutWindow.includes(cand)) continue;
+      if (familyWindow.includes(layoutFamily(cand))) continue;
+      return cand;
+    }
+    return cycle[idx % cycle.length];
+  };
+
   return slides.map((s, idx) => {
     const type = String(s.type || "content").toLowerCase();
     if (type === "cover" || type === "closing" || type === "quote") return s;
+
     const current = baseLayoutId(s.layout);
-    const preferred = current && current !== lastLayout ? current : cycle[idx % cycle.length];
-    s.layout = preferred;
-    lastLayout = preferred;
-    if (!s.variant || s.variant === "default") s.variant = ["glass", "outline", "filled", "neon"][idx % 4];
-    if (!s.accent || s.accent === "none") s.accent = ["top", "left", "corner", "underline", "side-bar"][idx % 5];
+    const currentFamily = current ? layoutFamily(current) : "";
+
+    const repeatsLayout = current && layoutWindow.includes(current);
+    const repeatsFamily = currentFamily && familyWindow.includes(currentFamily);
+
+    const picked = (!current || repeatsLayout || repeatsFamily) ? pickFromCycle(idx) : current;
+    s.layout = picked;
+
+    layoutWindow.push(picked);
+    if (layoutWindow.length > 4) layoutWindow.shift();
+    familyWindow.push(layoutFamily(picked));
+    if (familyWindow.length > 2) familyWindow.shift();
+
+    // variant + accent rotation: pick the next one in the cycle that isn't
+    // identical to the previous slide's pair.
+    let variant = String(s.variant || "");
+    if (!variant || variant === lastVariant) variant = VARIANT_CYCLE[idx % VARIANT_CYCLE.length];
+    if (variant === lastVariant) variant = VARIANT_CYCLE[(idx + 1) % VARIANT_CYCLE.length];
+    s.variant = variant;
+    lastVariant = variant;
+
+    let accent = String(s.accent || "");
+    if (!accent || accent === lastAccent) accent = ACCENT_CYCLE[idx % ACCENT_CYCLE.length];
+    if (accent === lastAccent) accent = ACCENT_CYCLE[(idx + 1) % ACCENT_CYCLE.length];
+    s.accent = accent;
+    lastAccent = accent;
+
     return s;
   });
 }
+
+/** Back-compat alias — old call sites kept working. */
+const enforceDigitalOasisVariety = enforceLayoutVariety;
 
 /* ────────────────────────────────────────────────────────── */
 /* Server                                                     */
