@@ -210,27 +210,166 @@ export const PREMIUM_HTML_TEMPLATES: SlidesTemplate[] = [
 ];
 
 /**
- * Standard templates mirror the premium catalogue 1:1 — same visual designs,
- * same content scaffolding — but they're rendered as a classic slide-by-slide
- * presentation with horizontal nav buttons (set by SlidesHtmlDeckCard based
- * on `category`). IDs use a `-standard` suffix so callers can switch modes
- * without disturbing existing premium decks.
+ * Standard templates are clean classic slide-by-slide decks. They all share
+ * a single minimal HTML scaffold (`standard-classic-deck`) and get their
+ * distinct visual identity from the `variant` field — typography, colour,
+ * spacing and ornament rules live in VARIANT_STYLES inside SlidesHtmlDeckCard.
+ * Each entry below uses a *different* variant so no two standard templates
+ * look the same.
  */
-export const STANDARD_HTML_TEMPLATES: SlidesTemplate[] = PREMIUM_HTML_TEMPLATES.map((t) => ({
-  ...t,
-  id: `${t.id}-standard`,
-  category: "standard",
-  description: `${t.description} Classic slide deck with side navigation buttons.`,
-}));
+const STANDARD_SLUG = "standard-classic-deck";
+
+export const STANDARD_HTML_TEMPLATES: SlidesTemplate[] = [
+  {
+    id: "classic-editorial-standard",
+    name: "Editorial — Cormorant",
+    description: "Editorial serif deck with italic display headlines and refined hairline rules. Classic slide-by-slide with side navigation.",
+    colors: ["#fafaf7", "#111111"],
+    category: "standard",
+    htmlSlug: STANDARD_SLUG,
+    variant: "editorial-serif",
+    cover: folioScatterCover,
+  },
+  {
+    id: "classic-bold-standard",
+    name: "Bold — Archivo Black",
+    description: "High-impact display deck with numbered bullets, oversized headlines and a single saturated accent. Classic slide-by-slide.",
+    colors: ["#0a0a0a", "#ff5722"],
+    category: "standard",
+    htmlSlug: STANDARD_SLUG,
+    variant: "bold-display",
+    cover: spideyWebCover,
+  },
+  {
+    id: "classic-mono-standard",
+    name: "Mono — Terminal",
+    description: "Monospace IDE-flavoured deck with dashed dividers, `//` kickers and chevron bullets. Classic slide-by-slide.",
+    colors: ["#0e0e10", "#9cf2a0"],
+    category: "standard",
+    htmlSlug: STANDARD_SLUG,
+    variant: "minimal-mono",
+    cover: synthraBuilderCover,
+  },
+  {
+    id: "classic-glass-standard",
+    name: "Glass — Frost",
+    description: "Translucent glassmorphic surfaces with soft blurs and pastel gradients. Classic slide-by-slide.",
+    colors: ["#e9efff", "#7aa2ff"],
+    category: "standard",
+    htmlSlug: STANDARD_SLUG,
+    variant: "glass-frost",
+    cover: aquaraWaterCover,
+  },
+  {
+    id: "classic-neon-standard",
+    name: "Neon — Tech",
+    description: "Dark deck with glowing accent, Space Grotesk display and soft accent borders between sections. Classic slide-by-slide.",
+    colors: ["#070b1a", "#22d3ee"],
+    category: "standard",
+    htmlSlug: STANDARD_SLUG,
+    variant: "neon-tech",
+    cover: digitalOasisCover,
+  },
+  {
+    id: "classic-pastel-standard",
+    name: "Soft Pastel",
+    description: "Warm pastel palette with rounded ornament, gentle hierarchy and airy spacing. Classic slide-by-slide.",
+    colors: ["#fdf2f8", "#c084fc"],
+    category: "standard",
+    htmlSlug: STANDARD_SLUG,
+    variant: "soft-pastel",
+    cover: seasonalScrollCover,
+  },
+  {
+    id: "classic-luxury-standard",
+    name: "Luxury Gold",
+    description: "Dark luxury deck with gold accents, Playfair italics and centered ornamental dividers. Classic slide-by-slide.",
+    colors: ["#0e0e0e", "#c9a84c"],
+    category: "standard",
+    htmlSlug: STANDARD_SLUG,
+    variant: "luxury-gold",
+    cover: vantaAtelierCover,
+  },
+  {
+    id: "classic-brutalist-standard",
+    name: "Brutalist",
+    description: "Raw brutalist deck with thick rules, hard borders and Helvetica-style display. Classic slide-by-slide.",
+    colors: ["#ffffff", "#0a0a0a"],
+    category: "standard",
+    htmlSlug: STANDARD_SLUG,
+    variant: "brutalist",
+    cover: yashFolioCover,
+  },
+  {
+    id: "classic-aurora-standard",
+    name: "Aurora Glow",
+    description: "Cinematic dark deck with aurora-style accent gradients washing each section. Classic slide-by-slide.",
+    colors: ["#0a0a1a", "#a78bfa"],
+    category: "standard",
+    htmlSlug: STANDARD_SLUG,
+    variant: "aurora-glow",
+    cover: stormToCalmCover,
+  },
+  {
+    id: "classic-magazine-standard",
+    name: "Magazine Grid",
+    description: "Two-column editorial magazine layout with column body copy and serif headlines. Classic slide-by-slide.",
+    colors: ["#fafaf7", "#1a1714"],
+    category: "standard",
+    htmlSlug: STANDARD_SLUG,
+    variant: "magazine-grid",
+    cover: landscapeLanguageCover,
+  },
+  {
+    id: "classic-swiss-standard",
+    name: "Swiss Modernist",
+    description: "Strict grid, geometric Helvetica-style type, primary accent on hairline rules. Classic slide-by-slide.",
+    colors: ["#ffffff", "#dc2626"],
+    category: "standard",
+    htmlSlug: STANDARD_SLUG,
+    variant: "swiss-modernist",
+    cover: valenceBlobsCover,
+  },
+  {
+    id: "classic-kinetic-standard",
+    name: "Kinetic Poster",
+    description: "Poster-energy deck with oversized condensed display, kinetic kickers and bold accent slabs. Classic slide-by-slide.",
+    colors: ["#0a0a0a", "#facc15"],
+    category: "standard",
+    htmlSlug: STANDARD_SLUG,
+    variant: "kinetic-poster",
+    cover: kamiNotebookCover,
+  },
+  {
+    id: "classic-blueprint-standard",
+    name: "Blueprint Tech",
+    description: "Technical blueprint deck with dashed accent borders, monospace labels and Inter body. Classic slide-by-slide.",
+    colors: ["#0b1e3d", "#7dd3fc"],
+    category: "standard",
+    htmlSlug: STANDARD_SLUG,
+    variant: "blueprint-tech",
+    cover: oceanFlowCover,
+  },
+  {
+    id: "classic-cinematic-standard",
+    name: "Cinematic Letterbox",
+    description: "Cinematic letterboxed deck with centered titles, generous padding and a single warm accent. Classic slide-by-slide.",
+    colors: ["#0a0a0a", "#f5f0e0"],
+    category: "standard",
+    htmlSlug: STANDARD_SLUG,
+    variant: "cinematic-letterbox",
+    cover: axiomVectorCover,
+  },
+];
 
 export const SLIDES_TEMPLATES: SlidesTemplate[] = [
   ...STANDARD_HTML_TEMPLATES,
   ...PREMIUM_HTML_TEMPLATES,
 ];
 
-export const DEFAULT_SLIDES_TEMPLATE = "digital-oasis-standard";
+export const DEFAULT_SLIDES_TEMPLATE = "classic-editorial-standard";
 
-/** Strip the `-standard` suffix to find the underlying premium definition. */
+/** Strip the `-standard` suffix to find any matching premium definition. */
 function baseTemplateId(id?: string | null): string | null {
   if (!id) return null;
   return id.endsWith("-standard") ? id.slice(0, -"-standard".length) : id;
@@ -241,7 +380,9 @@ export function findSlidesTemplate(id?: string | null): SlidesTemplate {
   if (direct) return direct;
   const base = baseTemplateId(id);
   const fallback = base ? PREMIUM_HTML_TEMPLATES.find((t) => t.id === base) : null;
-  return fallback || (PREMIUM_HTML_TEMPLATES[0] as SlidesTemplate);
+  if (fallback) return fallback;
+  // Final fallback: first standard template (clean classic deck)
+  return (STANDARD_HTML_TEMPLATES[0] || PREMIUM_HTML_TEMPLATES[0]) as SlidesTemplate;
 }
 
 export function isPremiumHtml(id?: string | null): boolean {
