@@ -829,6 +829,8 @@ const ChatPage = () => {
       // Source 2: same-tab localStorage entries (fallback before DB write lands).
       void (async () => {
         try {
+          // Hydrate in-memory active-jobs map from background_jobs so we can re-attach after reload.
+          await hydrateActiveChatJobs(id);
           type Entry = { jobId: string; messageId?: string; clientId?: string; userInput: string };
           const entries: Entry[] = [];
           // DB-sourced placeholders
