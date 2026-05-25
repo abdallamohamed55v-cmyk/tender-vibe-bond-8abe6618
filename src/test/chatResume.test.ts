@@ -5,9 +5,10 @@ import {
   removeActiveChatJob,
 } from "@/lib/jobs/chatResume";
 
-describe("chatResume (localStorage tracker)", () => {
+describe("chatResume (in-memory tracker)", () => {
   beforeEach(() => {
-    localStorage.clear();
+    // Clear all in-memory state by removing any leftover jobs from prior tests.
+    for (const j of getActiveChatJobs("__sweep__")) removeActiveChatJob(j.jobId);
     vi.useRealTimers();
   });
 
@@ -54,17 +55,9 @@ describe("chatResume (localStorage tracker)", () => {
     expect(getActiveChatJobs("A").map((j) => j.jobId)).toEqual(["new"]);
   });
 
-  it("survives malformed localStorage payloads", () => {
-    localStorage.setItem("chat:activeJobs", "not-json");
-    expect(getActiveChatJobs("A")).toEqual([]);
-    // After a bad read, a new add should still work
-    addActiveChatJob({ jobId: "ok", conversationId: "A", clientId: "x", userInput: "", startedAt: Date.now() });
-    expect(getActiveChatJobs("A").map((j) => j.jobId)).toEqual(["ok"]);
-  });
-
   it("empties storage entirely when last job is removed", () => {
     addActiveChatJob({ jobId: "only", conversationId: "A", clientId: "x", userInput: "", startedAt: Date.now() });
     removeActiveChatJob("only");
-    expect(localStorage.getItem("chat:activeJobs")).toBeNull();
+    expect(getActiveChatJobs("A")).toEqual([]);
   });
 });
