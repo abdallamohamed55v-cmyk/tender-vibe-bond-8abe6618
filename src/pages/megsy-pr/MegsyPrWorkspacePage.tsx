@@ -13,6 +13,9 @@ import MobilePreviewView from "@/components/megsy-pr/MobilePreviewView";
 import AppSidebar from "@/components/layout/AppSidebar";
 import { getProjectDraft, saveProjectDraftDebounced } from "@/lib/projectDrafts";
 
+// In-memory active job tracker (DB `background_jobs` is source of truth; this is just a fast lookup).
+const buildAgentActiveJobs = new Map<string, string>();
+
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 
 interface Msg { id?: string; role: "user" | "assistant"; content: string; raw?: string; pending?: boolean }
