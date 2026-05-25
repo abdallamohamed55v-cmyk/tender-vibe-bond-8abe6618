@@ -925,12 +925,12 @@ Instruction: ${instruction}`;
   send({ type: "phase", name: "images" });
   await narrate(`Write ONE short sentence saying you're hand-picking visuals for each slide now.`);
 
-  if (ENABLE_BLOCKING_SMART_IMAGES && timeRemaining() > 55_000) {
+  if (ENABLE_BLOCKING_SMART_IMAGES && timeRemaining() > 25_000) {
     const slidesNeedingImage = deepSlides.filter(s => {
       const layout = (s.layout as string) || "";
       const textOnly = ["callout","manifesto","pull-quote","poster-typo","definition","quote"].includes(layout) || s.type === "quote";
       return !textOnly;
-    }).slice(0, 3);
+    });
     const usedUrls = new Set<string>();
     await Promise.all(slidesNeedingImage.map(async (s) => {
       try {
