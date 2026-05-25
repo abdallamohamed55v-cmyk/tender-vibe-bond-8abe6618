@@ -2,6 +2,25 @@
 // templates in `showcase_items`. Reply `/trend` to a media message to toggle
 // the trending flag (pinned to the top of the gallery).
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { ImageMagick, initializeImageMagick, MagickFormat } from "https://deno.land/x/imagemagick_deno@0.0.26/mod.ts";
+
+let magickReady: Promise<void> | null = null;
+function ensureMagick(): Promise<void> {
+  if (!magickReady) magickReady = initializeImageMagick();
+  return magickReady;
+}
+
+async function convertToWebp(bytes: Uint8Array): Promise<Uint8Array> {
+  await ensureMagick();
+  return await new Promise<Uint8Array>((resolve, reject) => {
+    try {
+      ImageMagick.read(bytes, (img) => {
+        img.quality = 92;
+        img.write(MagickFormat.Webp, (data) => resolve(new Uint8Array(data)));
+      });
+    } catch (e) { reject(e); }
+  });
+}
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -171,7 +190,27 @@ Deno.serve(async (req) => {
       await reply(chat_id, "Could not download the file from Telegram.");
       return new Response(JSON.stringify({ ok: true }), { headers: corsHeaders });
     }
-    const thumbnail_url = thumb_id ? await getFileUrl(thumb_id) : null;
+    let thumbnail_url = thumb_id ? await getFileUrl(thumb_id) : null;
+
+    // For images: download, convert to WebP, upload to Supabase Storage
+    let final_media_url = media_url;
+    if (media_type === "image") {
+      try {
+        const dl = await fetch(media_url);
+        if (!dl.ok) throw new Error(`download failed ${dl.status}`);
+        const inputBytes = new Uint8Array(await dl.arrayBuffer());
+        const webpBytes = await convertToWebp(inputBytes);
+        const path = `telegram/${chat_id}/${message.message_id}-${Date.now()}.webp`;
+        const { error: upErr } = await db.storage
+          .from("showcase-media")
+          .upload(path, webpBytes, { contentType: "image/webp", upsert: true });
+        if (upErr) throw upErr;
+        const { data: pub } = db.storage.from("showcase-media").getPublicUrl(path);
+        final_media_url = pub.publicUrl;
+      } catch (e) {
+        console.error("webp conversion failed, falling back to telegram url", e);
+      }
+    }
 
     // Parse caption: first line = category (optional, prefixed with #), rest = prompt
     const lines = text.split("\n").map((s) => s.trim()).filter(Boolean);
@@ -183,7 +222,7 @@ Deno.serve(async (req) => {
     }
 
     const { error: insErr } = await db.from("showcase_items").insert({
-      media_url,
+      media_url: final_media_url,
       media_type,
       thumbnail_url,
       prompt: prompt || "Untitled",
