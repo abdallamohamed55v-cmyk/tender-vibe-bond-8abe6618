@@ -7899,7 +7899,7 @@ const SlidesHtmlDeckCard = ({ deck }: Props) => {
             </header>
 
             <div className="flex-1 px-3 sm:px-6 min-h-0">
-              <div className="w-full h-full rounded-2xl overflow-hidden bg-white shadow-2xl relative overscroll-contain touch-pan-y">
+              <div className={`w-full h-full rounded-2xl overflow-hidden bg-white shadow-2xl relative overscroll-contain ${orientation === "horizontal" ? "touch-pan-x" : "touch-pan-y"}`}>
                 {loading || !finalHtml ? (
                   <div className="w-full h-full flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-background via-background to-muted">
                     <motion.svg
@@ -7919,7 +7919,7 @@ const SlidesHtmlDeckCard = ({ deck }: Props) => {
                     srcDoc={presentationHtml}
                     sandbox="allow-scripts allow-same-origin"
                     scrolling="yes"
-                    className="w-full h-full border-0 bg-white touch-pan-y"
+                    className={`w-full h-full border-0 bg-white ${orientation === "horizontal" ? "touch-pan-x" : "touch-pan-y"}`}
                   />
                 )}
 
