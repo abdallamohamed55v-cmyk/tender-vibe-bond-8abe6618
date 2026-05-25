@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { useCredits } from "@/hooks/useCredits";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useToolTemplates } from "@/hooks/useToolTemplates";
-import characterSwapHero from "@/assets/character-swap-hero.jpg";
+import characterSwapHero from "@/assets/character-swap-hero.webp";
 
 type Stage = "landing" | "compose" | "generating" | "result";
 type Gender = "non-binary" | "male" | "female";

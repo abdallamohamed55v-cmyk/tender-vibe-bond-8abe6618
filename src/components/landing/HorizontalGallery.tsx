@@ -10,47 +10,47 @@ type ServiceItem = {
 
 const services: ServiceItem[] = [
   {
-    src: "/showcase/service-image-gen.jpg",
+    src: "/showcase/service-image-gen.webp",
     label: "AI Image Generator",
     desc: "Create high-quality images from text or references. Explore styles, refine results, and maintain consistency across creative outputs.",
   },
   {
-    src: "/showcase/service-video-gen.jpg",
+    src: "/showcase/service-video-gen.webp",
     label: "AI Video Generator",
     desc: "Create motion content from text or images. Animate stills, control pacing, and build short video sequences with clarity and intent.",
   },
   {
-    src: "/showcase/service-upscaler.jpg",
+    src: "/showcase/service-upscaler.webp",
     label: "AI Image Upscaler",
     desc: "Enhance resolution and clarity without losing detail. Prepare images for print, large formats, and high-quality delivery.",
   },
   {
-    src: "/showcase/service-editor.jpg",
+    src: "/showcase/service-editor.webp",
     label: "AI Image Editor",
     desc: "Edit any image with natural language. Swap elements, fix details, and restyle scenes without masks or layers.",
   },
   {
-    src: "/showcase/service-social.jpg",
+    src: "/showcase/service-social.webp",
     label: "AI Social Media Post Generator",
     desc: "Design content that looks consistent across every platform — so your brand always shows up sharp, clear, and recognizable.",
   },
   {
-    src: "/showcase/service-style.jpg",
+    src: "/showcase/service-style.webp",
     label: "Consistent Characters",
     desc: "Lock a character, style, or visual identity across every scene. Keep mood, palette, and tone cohesive across full campaigns.",
   },
   {
-    src: "/showcase/service-canvas.jpg",
+    src: "/showcase/service-canvas.webp",
     label: "Canvas Editor",
     desc: "Inpaint, outpaint, and restructure parts of an image with a prompt. Real-time canvas controls with instant previews.",
   },
   {
-    src: "/showcase/service-bgremove.jpg",
+    src: "/showcase/service-bgremove.webp",
     label: "Background Remover",
     desc: "Pixel-perfect cutouts in one click. Isolate subjects, drop in new backdrops, and ship product or portrait assets in seconds.",
   },
   {
-    src: "/showcase/service-audio.jpg",
+    src: "/showcase/service-audio.webp",
     label: "AI Voice & Audio",
     desc: "Generate voiceovers, soundtracks, and audio effects from a single prompt. Multilingual, expressive, studio-grade output.",
   },

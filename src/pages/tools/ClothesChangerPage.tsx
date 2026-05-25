@@ -10,7 +10,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { CLOTHES_STYLES, FOOTBALL_CLUBS, getFootballPrompt } from "@/lib/imageToolsData";
 import { useToolTemplates } from "@/hooks/useToolTemplates";
 import type { ToolTemplate } from "@/components/layout/ToolPageLayout";
-import clothesHero from "@/assets/clothes-hero.jpg";
+import clothesHero from "@/assets/clothes-hero.webp";
 
 type Stage = "landing" | "edit" | "generating" | "result";
 

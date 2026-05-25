@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, User, UserRound, Sparkles, Download, Share2, Upload, Check, Loader2, Wand2, RefreshCw } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import headshotHero from "@/assets/headshot-hero.jpg";
+import headshotHero from "@/assets/headshot-hero.webp";
 import { toast } from "sonner";
 import { useCredits } from "@/hooks/useCredits";
 import { useIsMobile } from "@/hooks/use-mobile";

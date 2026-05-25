@@ -8,8 +8,8 @@ import { toast } from "sonner";
 import { useCredits } from "@/hooks/useCredits";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useToolTemplates } from "@/hooks/useToolTemplates";
-import heroImg from "@/assets/tool-landing/video-swap-v8.jpg";
-import sampleFace from "@/assets/character-ref-boy-clean-boy-v2.jpg";
+import heroImg from "@/assets/tool-landing/video-swap-v8.webp";
+import sampleFace from "@/assets/character-ref-boy-clean-boy-v2.webp";
 
 type Stage = "landing" | "compose" | "generating" | "result";
 type Resolution = "720p" | "1080p";

@@ -7,8 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useCredits } from "@/hooks/useCredits";
 import { useIsMobile } from "@/hooks/use-mobile";
-import heroImg from "@/assets/tool-landing/green-screen-v8.jpg";
-import samplePoster from "@/assets/green-screen-sample-boy-v2.jpg";
+import heroImg from "@/assets/tool-landing/green-screen-v8.webp";
+import samplePoster from "@/assets/green-screen-sample-boy-v2.webp";
 
 type Stage = "landing" | "compose" | "generating" | "result";
 type BgMode = "transparent" | "white" | "black" | "blur";

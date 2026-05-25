@@ -12,7 +12,7 @@ import { useFalImageModels, type FalImageModel } from "@/hooks/useFalModels";
 import { FalModelPickerSheet } from "@/components/fal-models/FalModelPickerSheet";
 import { MultiImageAttach } from "@/components/fal-models/MultiImageAttach";
 import { ImageModelBadges } from "@/components/fal-models/ModelBadges";
-import studioHero from "@/assets/studio-images-hero.jpg";
+import studioHero from "@/assets/studio-images-hero.webp";
 
 interface ChatMessage {
   id: string;

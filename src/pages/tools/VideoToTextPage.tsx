@@ -6,8 +6,8 @@ import { ArrowLeft, Upload, Copy, RefreshCw, FileText } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useCredits } from "@/hooks/useCredits";
-import heroImg from "@/assets/tool-landing/video-to-text-v8.jpg";
-import samplePoster from "@/assets/video-to-text-sample-boy-v2.jpg";
+import heroImg from "@/assets/tool-landing/video-to-text-v8.webp";
+import samplePoster from "@/assets/video-to-text-sample-boy-v2.webp";
 
 type Stage = "landing" | "compose" | "generating" | "result";
 type Mode = "file" | "url";

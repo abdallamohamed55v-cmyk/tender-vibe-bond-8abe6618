@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useCredits } from "@/hooks/useCredits";
-import perspectiveHero from "@/assets/perspective-hero.jpg";
+import perspectiveHero from "@/assets/perspective-hero.webp";
 import MediaToolShell, { type ToolStage } from "@/components/media/MediaToolShell";
 
 const PerspectiveCorrectionPage = () => {

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useCredits } from "@/hooks/useCredits";
-import colorizerHero from "@/assets/colorizer-hero.jpg";
+import colorizerHero from "@/assets/colorizer-hero.webp";
 import MediaToolShell, { type ToolStage } from "@/components/media/MediaToolShell";
 
 const ColorizerPage = () => {

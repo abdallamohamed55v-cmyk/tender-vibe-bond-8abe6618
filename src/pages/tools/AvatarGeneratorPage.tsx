@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useCredits } from "@/hooks/useCredits";
 import { useIsMobile } from "@/hooks/use-mobile";
-import avatarHero from "@/assets/avatar-generator-hero.jpg";
+import avatarHero from "@/assets/avatar-generator-hero.webp";
 
 type Stage = "landing" | "compose" | "generating" | "result";
 

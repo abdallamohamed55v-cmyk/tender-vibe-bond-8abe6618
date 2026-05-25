@@ -37,20 +37,20 @@ export interface SlidesTemplate {
   cover: string;
 }
 
-import digitalOasisCover from "@/assets/slide-templates/digital-oasis.jpg";
-import oceanFlowCover from "@/assets/slide-templates/ocean-flow.jpg";
-import seasonalScrollCover from "@/assets/slide-templates/seasonal-scroll.jpg";
-import vantaAtelierCover from "@/assets/slide-templates/vanta-atelier.jpg";
-import aquaraWaterCover from "@/assets/slide-templates/aquara-water.jpg";
-import landscapeLanguageCover from "@/assets/slide-templates/landscape-language.jpg";
-import valenceBlobsCover from "@/assets/slide-templates/valence-blobs.jpg";
-import synthraBuilderCover from "@/assets/slide-templates/synthra-builder.jpg";
-import kamiNotebookCover from "@/assets/slide-templates/kami-notebook.jpg";
-import spideyWebCover from "@/assets/slide-templates/spidey-web.jpg";
-import yashFolioCover from "@/assets/slide-templates/yash-folio.jpg";
-import stormToCalmCover from "@/assets/slide-templates/storm-to-calm.jpg";
-import folioScatterCover from "@/assets/slide-templates/folio-scatter.jpg";
-import axiomVectorCover from "@/assets/slide-templates/axiom-vector.jpg";
+import digitalOasisCover from "@/assets/slide-templates/digital-oasis.webp";
+import oceanFlowCover from "@/assets/slide-templates/ocean-flow.webp";
+import seasonalScrollCover from "@/assets/slide-templates/seasonal-scroll.webp";
+import vantaAtelierCover from "@/assets/slide-templates/vanta-atelier.webp";
+import aquaraWaterCover from "@/assets/slide-templates/aquara-water.webp";
+import landscapeLanguageCover from "@/assets/slide-templates/landscape-language.webp";
+import valenceBlobsCover from "@/assets/slide-templates/valence-blobs.webp";
+import synthraBuilderCover from "@/assets/slide-templates/synthra-builder.webp";
+import kamiNotebookCover from "@/assets/slide-templates/kami-notebook.webp";
+import spideyWebCover from "@/assets/slide-templates/spidey-web.webp";
+import yashFolioCover from "@/assets/slide-templates/yash-folio.webp";
+import stormToCalmCover from "@/assets/slide-templates/storm-to-calm.webp";
+import folioScatterCover from "@/assets/slide-templates/folio-scatter.webp";
+import axiomVectorCover from "@/assets/slide-templates/axiom-vector.webp";
 
 export const PREMIUM_HTML_TEMPLATES: SlidesTemplate[] = [
   {

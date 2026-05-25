@@ -2,16 +2,16 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 
 const firstSet = [
-  { src: "/api-showcase/showcase-1.png", type: "image" },
+  { src: "/api-showcase/showcase-1.webp", type: "image" },
   { src: "/api-showcase/video-2.mp4", type: "video" },
-  { src: "/api-showcase/showcase-2.jpg", type: "image" },
+  { src: "/api-showcase/showcase-2.webp", type: "image" },
   { src: "/api-showcase/video-3.mp4", type: "video" },
 ] as const;
 
 const secondSet = [
-  { src: "/api-showcase/showcase-3.jpg", type: "image" },
+  { src: "/api-showcase/showcase-3.webp", type: "image" },
   { src: "/api-showcase/video-4.mp4", type: "video" },
-  { src: "/api-showcase/showcase-4.jpg", type: "image" },
+  { src: "/api-showcase/showcase-4.webp", type: "image" },
   { src: "/api-showcase/video-5.mp4", type: "video" },
 ] as const;
 

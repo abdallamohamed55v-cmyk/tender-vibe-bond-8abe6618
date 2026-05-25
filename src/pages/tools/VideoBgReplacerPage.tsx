@@ -6,8 +6,8 @@ import { ArrowLeft, Upload, Download, Share2, RefreshCw, Film, ImagePlus } from 
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useCredits } from "@/hooks/useCredits";
-import heroImg from "@/assets/tool-landing/video-bg-replacer-v8.jpg";
-import samplePoster from "@/assets/video-bg-replacer-sample-boy-v2.jpg";
+import heroImg from "@/assets/tool-landing/video-bg-replacer-v8.webp";
+import samplePoster from "@/assets/video-bg-replacer-sample-boy-v2.webp";
 
 type Stage = "landing" | "compose" | "generating" | "result";
 type Mode = "image" | "prompt";
