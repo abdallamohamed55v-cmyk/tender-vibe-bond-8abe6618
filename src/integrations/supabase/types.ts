@@ -2537,6 +2537,33 @@ export type Database = {
         }
         Relationships: []
       }
+      message_feedback: {
+        Row: {
+          created_at: string
+          id: string
+          message_id: string
+          project_id: string
+          user_id: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message_id: string
+          project_id: string
+          user_id: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message_id?: string
+          project_id?: string
+          user_id?: string
+          value?: string
+        }
+        Relationships: []
+      }
       message_reactions: {
         Row: {
           conversation_id: string
@@ -5099,6 +5126,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_connector_state: {
+        Row: {
+          connector_id: string
+          enabled: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          connector_id: string
+          enabled?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          connector_id?: string
+          enabled?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_gallery: {
         Row: {
