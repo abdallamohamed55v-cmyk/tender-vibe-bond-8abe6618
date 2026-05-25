@@ -909,14 +909,25 @@ const ChatMessage = ({ role, content, messageIndex, isStreaming, isThinking, ima
               </div>
             );
             if (showSlidesInfoBox) {
+              const isAr = al === "ar";
+              const kicker = isAr ? "جارٍ تجهيز العرض" : "Preparing your deck";
               return (
-                <div className="space-y-2">
-                  {inner}
+                <div className="space-y-2" dir={langDir(al)}>
                   {isStreaming && (
-                    <div className="h-[1px] w-full bg-foreground/[0.05] overflow-hidden relative">
-                      <div className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-primary to-transparent animate-slides-shimmer" />
+                    <div className="text-[11px] font-bold tracking-[0.05em] text-primary uppercase opacity-90">
+                      {kicker}
                     </div>
                   )}
+                  <div className="relative">
+                    {inner}
+                    {isStreaming && (
+                      <span className="inline-flex gap-0.5 ms-1 align-baseline">
+                        <span className="w-1 h-1 bg-primary rounded-full animate-pulse" />
+                        <span className="w-1 h-1 bg-primary rounded-full animate-pulse [animation-delay:150ms]" />
+                        <span className="w-1 h-1 bg-primary rounded-full animate-pulse [animation-delay:300ms]" />
+                      </span>
+                    )}
+                  </div>
                 </div>
               );
             }
